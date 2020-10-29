@@ -1,30 +1,54 @@
 import React from 'react';
 import logo from './itachi.jpg';
 import './App.css';
+import { Signup } from "./pages/Signup.js";
+import { Welcome } from "./pages/Welcome.js";
+import { BrowserRouter,Route, Switch } from "react-router-dom";
+import { createMuiTheme, ThemeProvider  } from '@material-ui/core/styles';
+
 //import 'utils/API.js'
 
 class App extends React.Component{
-  constructor(props){
-    super(props);
-    this.state={apiResponse:""};
-  }
-  callAPI(){
-    fetch("http://localhost:8800/test").then(res => res.text()).then(res => this.setState({apiResponse: res}))
-  }
-  componentWillMount(){
-    this.callAPI();
-  }
 
 render() {
+  const theme = createMuiTheme({
+      palette: {
+        primary: {
+          light: '#e69f4a',
+          main: '#e0881d',
+          dark: '#9c5f14',
+          contrastText: '#fff',
+        },
+        secondary: {
+          light: '#db828b',
+          main: '#d3636e',
+          dark: '#93454d',
+          contrastText: '#fff',
+        },
+      },
+      typography: {
+        htmlFontSize: 16,
+        fontFamily: "Manrope VF",
+        fontSize: 14,
+        fontWeightLight: 300,
+        fontWeightRegular: 400,
+        fontWeightMedium: 500,
+        fontWeightBold: 700,
+      }
+    });
 
   return (
     <div className="App">
-      <header className="App-header">
-      <p> Je suis itachi uchiwa </p>
-        <img src={logo}  alt="itachi" />
-
-      </header>
-      <p> {this.state.apiResponse} </p>
+        <div className="">
+            <ThemeProvider theme={theme}>
+            <BrowserRouter>
+              <Switch>
+                <Route exact path="/" component={Welcome} />
+                <Route exact path="/signup" component={Signup} />
+              </Switch>
+              </BrowserRouter>
+            </ThemeProvider>
+          </div>
     </div>
   );
 }
