@@ -3,6 +3,8 @@ import logo from './itachi.jpg';
 import './App.css';
 import { Signup } from "./pages/Signup.js";
 import { Welcome } from "./pages/Welcome.js";
+import { Home } from "./pages/Home.js";
+import { Login } from "./pages/Login.js";
 import { BrowserRouter,Route, Switch } from "react-router-dom";
 import { createMuiTheme, ThemeProvider  } from '@material-ui/core/styles';
 
@@ -45,6 +47,8 @@ render() {
               <Switch>
                 <Route exact path="/" component={Welcome} />
                 <Route exact path="/signup" component={Signup} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/home" component={Home} />
               </Switch>
               </BrowserRouter>
             </ThemeProvider>

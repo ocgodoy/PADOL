@@ -46,13 +46,16 @@ export class Signup extends React.Component {
 
       //Message PopUp red
       let alertPopUp = null;
-      if (this.state.status === 405){
-          alertPopUp = <Alert className={"mb-3"} severity="error">Cette adresse mail est déjà liée à un compte !</Alert>
+      if (this.state.status == 402){
+          alertPopUp = <Alert className={"mb-3"} severity="error">Addresse mail déjà utilisée</Alert>
       }
-
+      if (this.state.status == 401){
+          alertPopUp = <Alert className={"mb-3"} severity="error">Pseudo déjà utilisé</Alert>
+      }
     return (
         <div>
-
+          <header className="App-header">
+            <h1> PADOL APP </h1>
             <Container className={"pt-5"}>
                 <Paper className="text-center mx-auto pt-5" style={{maxWidth: "35em",}}>
                     {alertPopUp}
@@ -69,17 +72,13 @@ export class Signup extends React.Component {
                     <input type="password" id="password" className="FormField__Input" value={this.state.password} onChange={this.handleChange} />
                   </div>
 
-                  <div className="FormField">
-                    <label className="FormField__CheckboxLabel">
-                      <input className="FormField__Checkbox" type="checkbox" id="hasAgreed" value={this.state.hasAgreed} onChange={this.handleChange} /> J'accepte toutes les  />
 
-                    </label>
-                  </div>
                   <div className="FormField pb-5">
                     <button onClick={this.send} className="FormField__Button mr-20">M'inscrire</button> <Link to="/login" className="FormField__Link">Je suis déjà un utilisateur</Link>
                   </div>
                 </Paper>
             </Container>
+          </header>
         </div>
     );
   }

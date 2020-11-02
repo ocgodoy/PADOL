@@ -1,33 +1,36 @@
 import React,{Component} from 'react';
 import logo from '../itachi.jpg';
 import '../App.css';
-
+import {Link} from "react-router-dom";
 
 
 export class Welcome extends Component {
 
-  constructor(props){
-    super(props);
-    this.state={apiResponse:""};
-  }
-  callAPI(){
-    fetch("http://localhost:8800/test").then(res => res.text()).then(res => this.setState({apiResponse: res}))
-  }
-  componentWillMount(){
-    this.callAPI();
-  }
 
+
+  handleSignup = ()=>{
+        window.location = "/signup";
+    };
+    handleConnect = ()=>{
+        window.location ="/login"
+    };
 render(){
+
+
+
+
 
 
     return (
         <div>
-        <header className="App-header">
-        <p> Je suis itachi uchiwa </p>
-          <img src={logo}  alt="itachi" />
+          <header className="App-header">
+            <h1> PADOL APP </h1>
+            <div className="FormField pb-5">
+              <button onClick={this.handleSignup} className="FormField__Button mr-20">M'inscrire</button> <button onClick={this.handleConnect} className="FormField__Button mr-20">Se connecter</button>
+            </div>
 
-        </header>
-        <p> {this.state.apiResponse} </p>
+
+          </header>
         </div>
         );
     }

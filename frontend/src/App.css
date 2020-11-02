@@ -14,7 +14,8 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-image: url('background2.jgp.jpg');
+  background-size: cover;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
