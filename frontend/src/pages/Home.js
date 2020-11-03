@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
-import logo from '../itachi.jpg';
+import logo from '../itachi.jpg'
+import noimg from '../noimg.jpg'
 import '../App.css';
 import {Link} from "react-router-dom";
 
@@ -9,10 +10,18 @@ export class Home extends React.Component {
   constructor(props){
     super(props);
     this.state={apiResponse:""};
+    this.state={img:""}
     this.state={user:"JAJA"};
   }
   callAPI(){
-    fetch("http://localhost:8800/test").then(res => res.text()).then(res => this.setState({apiResponse: res}))
+    fetch("http://localhost:8800/test").then(res => res.text()).then(res => this.setState({apiResponse: res})).then(() => {
+      if(this.state.apiResponse == 'Compteur dépassé'){
+        this.setState({img: "../noimg.jpg"});
+      }
+      else {
+        this.setState({img: logo});
+      }
+    })
   }
   componentWillMount(){
     this.callAPI();
@@ -20,28 +29,23 @@ export class Home extends React.Component {
   }
 
   getUser(){
-          let temp = (localStorage.getItem("user"));
-          console.log(temp)
-          this.setState({user: temp.login});
-      };
+    let temp = (localStorage.getItem("user"));
+    console.log(temp)
+    this.setState({user: temp.login});
+  };
 
-render(){
-
-
-
-
-
+  render(){
 
     return (
-        <div>
-        <header className="App-header">
-        <h1> PADOL APP </h1>
-        <p> {this.state.user} </p>
-          <img src={logo}  alt="itachi" />
-          <p> Je suis itachi uchiwa </p>
-        </header>
-        <p> {this.state.apiResponse} </p>
-        </div>
-        );
-    }
+      <div>
+      <header className="App-header">
+      <h1> PADOL APP </h1>
+      <p> {this.state.user} </p>
+        <img src={this.state.img}  alt="itachi" />
+        <p> Je suis itachi uchiwa </p>
+      </header>
+      <p> {this.state.apiResponse} </p>
+      </div>
+  );
+  }
 }
