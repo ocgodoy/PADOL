@@ -16,7 +16,7 @@ export class Home extends React.Component {
   callAPI(){
     fetch("http://localhost:8800/test").then(res => res.text()).then(res => this.setState({apiResponse: res})).then(() => {
       if(this.state.apiResponse == 'Compteur dépassé'){
-        this.setState({img: "../noimg.jpg"});
+        this.setState({img: noimg});
       }
       else {
         this.setState({img: logo});
