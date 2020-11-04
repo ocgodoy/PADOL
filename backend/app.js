@@ -4,7 +4,9 @@ const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 const port = 8800;
 const app = express();
-const router = express.Router();
+//const router = express.Router();
+
+const userRoutes = require('../routes/user');
 
 app.use(cors());
 const urlencodeParser = bodyParser.urlencoded({extended: true});
@@ -12,16 +14,11 @@ app.use(urlencodeParser);
 app.use(bodyParser.json());
 
 // Connexion à notre base de données
-mongoose.connect("mongodb://localhost:27017", { useNewUrlParser: true,  useUnifiedTopology: true } );
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  console.log("\nConnecté à la bdd !");
-});
-module.exports = db;
-
-
-
+mongoose.connect('mongodb+srv://padol_usr:<password>@padolcluster.pn3hp.mongodb.net/<dbname>?retryWrites=true&w=majority',
+  { useNewUrlParser: true,
+    useUnifiedTopology: true })
+.then(() => console.log('Connexion à MongoDB réussie !'))
+.catch(() => console.log('Connexion à MongoDB échouée !'));
 
 var ctn = 0;
 app.use('/test', (req,res, next)=>{
@@ -33,8 +30,7 @@ app.use('/test', (req,res, next)=>{
        res.send('Compteur dépassé');
    }
 })
-app.use("/user", router);
-require(__dirname + "/controllers/userController")(router);
+app.use('api/auth', userRoutes);
 
 
 app.listen(port, ()=> {console.log('Server listening on port '+ port);});
