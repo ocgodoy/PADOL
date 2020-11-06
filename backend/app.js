@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const port = 8800;
 const app = express();
@@ -38,4 +38,3 @@ app.use('/image', imageRoutes);
 
 app.listen(port, ()=> {console.log('Server listening on port '+ port);});
 module.exports = app;
-db.dropDatabase()
