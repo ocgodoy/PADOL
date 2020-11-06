@@ -1,17 +1,33 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import "./styles/custom.css";
+import 'react-toastify/dist/ReactToastify.css';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+import React from "react";
+import ReactDOM from "react-dom";
+import { createStore, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
+import reducers from "./reducers";
+import NetworkService from './utils/NetworkService';
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import App from "./container/App";
+
+console.log('************** process.env.NODE_ENV ****************** ', process.env.NODE_ENV)
+
+const store = createStore(reducers, applyMiddleware(thunk, logger));
+
+
+NetworkService.setInterceptors(store);
+NetworkService.setBaseUrl('/api');
+
+const Root = () => {
+  return ( <
+    Provider store = {
+      store
+    } >
+			<App />
+    </Provider>
+  );
+};
+
+ReactDOM.render( <Root / > , document.getElementById("root"));

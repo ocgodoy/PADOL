@@ -4,8 +4,8 @@ exports.createImage = (req, res, next) => {
     const image = new Image({
       url: req.body.url,
       caption: req.body.caption,
-      uploadDate: Date.now(),
-      expiryDate: req.body.expiryDate,
+      uploadDate: req.body.date,
+      //expiryDate: req.body.expiryDate,
       userId: req.body.userId
     });
     image.save().then(
