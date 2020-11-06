@@ -1,19 +1,13 @@
 const Image = require('../models/Image');
 
 exports.createImage = (req, res, next) => {
+    delete req.body._id;
     const image = new Image({
-      url: req.body.url,
-      caption: req.body.caption,
-      uploadDate: req.body.date,
-      //expiryDate: req.body.expiryDate,
-      userId: req.body.userId
+      ...req.body
     });
-    image.save().then(
-      () => {
-        res.status(201).json({
-          message: 'Post saved successfully!'
-        });
-      }
+    image.save().then( () => { 
+      res.status(201).json({ message: 'Post saved successfully!' });
+    }
     ).catch(
       (error) => {
         res.status(400).json({ error: error });
@@ -36,7 +30,7 @@ exports.getOneImage = (req, res, next) => {
 };
 
 exports.modifyImage = (req, res, next) => {
-  const image = new Thing({
+  const image = new Image({
     _id: req.params.id,
     caption: req.body.caption,
     url: req.body.url,

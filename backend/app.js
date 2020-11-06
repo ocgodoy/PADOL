@@ -1,25 +1,31 @@
 const express = require('express');
-const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const port = 8800;
 const app = express();
-//const router = express.Router();
+
 
 const userRoutes = require('./routes/user');
 const imageRoutes = require('./routes/image');
 
-app.use(cors());
-const urlencodeParser = bodyParser.urlencoded({extended: true});
-app.use(urlencodeParser);
-app.use(bodyParser.json());
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    next();
+});
+
+//const urlencodeParser = bodyParser.urlencoded({extended: true});
+//app.use(urlencodeParser);
 
 // Connexion à notre base de données
-mongoose.connect('mongodb+srv://padol_usr:<password>@padolcluster.pn3hp.mongodb.net/<dbname>?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://padol_usr:S9_PaDoL_MMK@padolcluster.pn3hp.mongodb.net/<dbname>?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
 .then(() => console.log('Connexion à MongoDB réussie !'))
 .catch(() => console.log('Connexion à MongoDB échouée !'));
+
+app.use(bodyParser.json());
 
 var ctn = 0;
 app.use('/test', (req,res, next)=>{

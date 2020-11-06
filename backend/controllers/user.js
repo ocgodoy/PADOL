@@ -3,7 +3,20 @@ const bcrypt = require('bcrypt');
 
 const User = require('../models/User');
 
-exports.signup = (res, req, next) => {
+exports.getAllUsers = (req,res,next) =>{
+  User.find().then(
+    (users) => {
+      res.status(200).json(users);
+    }
+  ).catch(
+    (error) => {
+      res.status(400).json({ error: error });
+    }
+  );
+};
+
+exports.signup = (req, res, next) => {
+    console.log('\n Passeword is : ' + req.body.password + '\n');
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
       const user = new User({
@@ -17,7 +30,7 @@ exports.signup = (res, req, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-exports.login = (res, req, next) => {
+exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
     .then(user => {
       if (!user) {
