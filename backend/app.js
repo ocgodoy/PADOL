@@ -6,7 +6,8 @@ const port = 8800;
 const app = express();
 //const router = express.Router();
 
-const userRoutes = require('../routes/user');
+const userRoutes = require('./routes/user');
+const imageRoutes = require('./routes/image');
 
 app.use(cors());
 const urlencodeParser = bodyParser.urlencoded({extended: true});
@@ -30,7 +31,9 @@ app.use('/test', (req,res, next)=>{
        res.send('Compteur dépassé');
    }
 })
-app.use('api/auth', userRoutes);
+
+app.use('/user', userRoutes);
+app.use('/image', imageRoutes);
 
 
 app.listen(port, ()=> {console.log('Server listening on port '+ port);});
