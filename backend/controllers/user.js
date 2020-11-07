@@ -60,17 +60,26 @@ exports.login = (req, res, next) => {
 /**************************** ACCOUNT INFO ****************************/
 
 exports.updateUser = (req,res,next) => {
-
+   //ce qu'on récupère du client: "fichier modifié"
+  console.log({...req.body});
+  console.log({...req.body._id});
+  //User.updateOne({_id: req.params.id}, { ...req.body, _id: req.params.id }) 
+  User.updateOne({_id: req.body._id}, { ...req.body, _id: req.body._id }) 
+  .then(() => res.status(200).json({ message: 'user modifié !'}))
+  .catch(error => res.status(400).json({ error }));
 };
 
 exports.deleteUser = (req, res,next) =>{
-
+  User.deleteOne({ ...req.body })
+  .then(() => res.status(200).json({ message: 'user supprimé !'}))
+  .catch(error => res.status(400).json({ error }));
+    console.log({...res.body});
 };
 
 /**************************** FRIENDS ****************************/
 
 exports.addFriend = (req,res,next) => {
-
+  
 };
 
 exports.deleteFriend = (req,res,next) => {

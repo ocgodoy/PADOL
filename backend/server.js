@@ -4,7 +4,6 @@ const app = require('./app');
 const port = 8800;
 app.set('port', port);
 
-/*
 const errorHandler = error => {
   if (error.syscall !== 'listen') {
     throw error;
@@ -33,6 +32,6 @@ server.on('listening', () => {
   const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
   console.log('Listening on ' + bind);
 });
-*/
+
 const server = http.createServer(app);
 server.listen(port);
