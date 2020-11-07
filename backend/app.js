@@ -15,16 +15,15 @@ app.use((req, res, next) => {
     next();
 });
 
-//const urlencodeParser = bodyParser.urlencoded({extended: true});
-//app.use(urlencodeParser);
-
-// Connexion à notre base de données
+// Connexion à MongoDB
 mongoose.connect('mongodb+srv://padol_usr:S9_PaDoL_MMK@padolcluster.pn3hp.mongodb.net/<dbname>?retryWrites=true&w=majority',
   { useNewUrlParser: true,
-    useUnifiedTopology: true })
+    useUnifiedTopology: true,
+    useCreateIndex: true })
 .then(() => console.log('Connexion à MongoDB réussie !'))
 .catch(() => console.log('Connexion à MongoDB échouée !'));
 
+// Lecture des corps de requête en json 
 app.use(bodyParser.json());
 
 var ctn = 0;
