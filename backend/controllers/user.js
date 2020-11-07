@@ -15,14 +15,16 @@ exports.getAllUsers = (req,res,next) =>{
   );
 };
 
+/**************************** CONNECTION ****************************/
+
 exports.signup = (req, res, next) => {
-    console.log('\n Passeword is : ' + req.body.password + '\n');
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
       const user = new User({
-        email: req.body.email,
-        password: hash
+        ...req.body,
       });
+      delete user.password;
+      user.password = hash;
       user.save()
         .then(() => res.status(201).json({ message: 'User created' }))
         .catch(error => res.status(400).json({ error }));
@@ -53,4 +55,28 @@ exports.login = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));
+};
+
+/**************************** ACCOUNT INFO ****************************/
+
+exports.updateUser = (req,res,next) => {
+
+};
+
+exports.deleteUser = (req, res,next) =>{
+
+};
+
+/**************************** FRIENDS ****************************/
+
+exports.addFriend = (req,res,next) => {
+
+};
+
+exports.deleteFriend = (req,res,next) => {
+
+};
+
+exports.getAllFriends = (req, res, next) => {
+
 };

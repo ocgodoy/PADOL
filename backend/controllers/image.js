@@ -63,7 +63,7 @@ exports.deleteImage = (req, res, next) => {
   );
 };
 
-exports.getAllStuff = (req, res, next) => {
+exports.getAllImages = (req, res, next) => {
   Image.find().then(
     (images) => {
       res.status(200).json(images);
