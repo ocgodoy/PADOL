@@ -20,8 +20,8 @@ mongoose.connect('mongodb+srv://padol_usr:S9_PaDoL_MMK@padolcluster.pn3hp.mongod
   { useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true })
-.then(() => console.log('Connexion à MongoDB réussie !'))
-.catch(() => console.log('Connexion à MongoDB échouée !'));
+.then(() => console.log('Connected to MongoDB !'))
+.catch(() => console.log('Connection to MongoDB failed !'));
 
 // Lecture des corps de requête en json 
 app.use(bodyParser.json());

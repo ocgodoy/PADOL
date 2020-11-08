@@ -1,6 +1,10 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+const ObjectId = require('mongodb').ObjectId;
 
+var db = mongoose.connection;
+var Users = db.collection('Users');
 const User = require('../models/User');
 
 exports.getAllUsers = (req,res,next) =>{
@@ -18,22 +22,29 @@ exports.getAllUsers = (req,res,next) =>{
 /**************************** CONNECTION ****************************/
 
 exports.signup = (req, res, next) => {
-    bcrypt.hash(req.body.password, 10)
-    .then(hash => {
-      const user = new User({
-        ...req.body
-      })
-      delete user.password;
-      user.password = hash;
-      user.save()
-        .then(() => res.status(201).json({ message: 'User created' }))
-        .catch(error => res.status(400).json({ error }));
-    })  
-    .catch(error => res.status(500).json({ error }));
+    Users.findOne({ email: req.body.email })
+    .then( user => {
+      if(!user){
+        bcrypt.hash(req.body.password, 10)
+        .then(hash => {
+          const user = new User({
+            ...req.body
+          })
+          delete user.password;
+          user.password = hash;
+          Users.insertOne(user)
+            .then(() => res.status(201).json({ message: 'User created' }))
+            .catch(error => res.status(400).json({ error }));
+        })  
+        .catch(error => res.status(500).json({ error }));
+      } else {
+        return res.status(401).json({ error: 'User already exists !' });
+      }
+    });  
 };
 
 exports.login = (req, res, next) => {
-    User.findOne({ email: req.body.email })
+    Users.findOne({ email: req.body.email })
     .then(user => {
       if (!user) {
         return res.status(401).json({ error: 'User not found' });
@@ -60,20 +71,32 @@ exports.login = (req, res, next) => {
 /**************************** ACCOUNT INFO ****************************/
 
 exports.updateUser = (req,res,next) => {
-   //ce qu'on récupère du client: "fichier modifié"
-  console.log({...req.body});
-  console.log({...req.body._id});
-  //User.updateOne({_id: req.params.id}, { ...req.body, _id: req.params.id }) 
-  User.updateOne({_id: req.body._id}, { ...req.body, _id: req.body._id }) 
-  .then(() => res.status(200).json({ message: 'user modifié !'}))
-  .catch(error => res.status(400).json({ error }));
+    let userId = req.params.id;
+    let newUser = new User( {...req.body} );
+    console.log(newUser);
+    if( req.body.password !==undefined ){    
+      bcrypt.hash(req.body.password, 10)
+      .then(hash => {
+        delete newUser.password;
+        newUser.password = hash;
+      }).catch(error => res.status(500).json({ error }))
+    }
+    Users.findOneAndUpdate( {_id: ObjectId(userId)}, {$set: { newUser, _id: ObjectId(userId)}} )
+    .then(user => {
+      if(!user){
+        return res.status(401).json('User not found !');
+      }
+      console.log(user);
+      res.status(200).json({ message: 'User updated' })
+    })
+    .catch(error => res.status(400).json({ error }))
 };
 
 exports.deleteUser = (req, res,next) =>{
-  User.deleteOne({ ...req.body })
-  .then(() => res.status(200).json({ message: 'user supprimé !'}))
-  .catch(error => res.status(400).json({ error }));
-    console.log({...res.body});
+    User.deleteOne({ ...req.body })
+    .then(() => res.status(200).json({ message: 'user supprimé !'}))
+    .catch(error => res.status(400).json({ error }));
+      console.log({...res.body});
 };
 
 /**************************** FRIENDS ****************************/
