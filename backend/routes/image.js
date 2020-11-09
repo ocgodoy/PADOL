@@ -4,9 +4,9 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const imageCtrl = require('../controllers/image');
 
-router.post('/',auth,imageCtrl.createImage);
-router.get('/:id',auth,imageCtrl.getOneImage);
-router.put('/:id',auth,imageCtrl.modifyImage);
-router.delete('/:id',auth, imageCtrl.deleteImage);
+router.post('/:userId',auth,imageCtrl.createImage);
+router.get('/:userId/:imageId',auth,imageCtrl.getOneImage);
+router.put('/:userId/:imageId',auth,imageCtrl.modifyImage);
+router.delete('/:userId/:imageId',auth, imageCtrl.deleteImage);
 
 module.exports = router;
