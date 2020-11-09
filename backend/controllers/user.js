@@ -72,16 +72,16 @@ exports.login = (req, res, next) => {
 
 exports.updateUser = (req,res,next) => {
     let userId = req.params.id;
-    let newUser = new User( {...req.body} );
+    let newUser = new User( {...req.body, _id: ObjectId(userId)} );
     console.log(newUser);
-    if( req.body.password !==undefined ){    
+    if( newUser.password !==undefined ){    
       bcrypt.hash(req.body.password, 10)
       .then(hash => {
         delete newUser.password;
         newUser.password = hash;
       }).catch(error => res.status(500).json({ error }))
     }
-    Users.findOneAndUpdate( {_id: ObjectId(userId)}, {$set: { newUser, _id: ObjectId(userId)}} )
+    Users.findOneAndUpdate( {_id: ObjectId(userId)}, newUser )
     .then(user => {
       if(!user){
         return res.status(401).json('User not found !');
@@ -93,10 +93,10 @@ exports.updateUser = (req,res,next) => {
 };
 
 exports.deleteUser = (req, res,next) =>{
-    User.deleteOne({ ...req.body })
-    .then(() => res.status(200).json({ message: 'user supprimé !'}))
+    Users.findOneAndDelete({ _id: ObjectId(req.params.id) })
+    .then(() => res.status(200).json({ message: 'User deleted !'}))
     .catch(error => res.status(400).json({ error }));
-      console.log({...res.body});
+    console.log({...res.body});
 };
 
 /**************************** FRIENDS ****************************/
