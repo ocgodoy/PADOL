@@ -29,6 +29,11 @@ exports.getOneImage = (req, res, next) => {
   );
 };
 
+exports.getAllImages = (req, res, next) => {
+
+  
+};
+
 exports.modifyImage = (req, res, next) => {
   const image = new Image({
     _id: req.params.id,
