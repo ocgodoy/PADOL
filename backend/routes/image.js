@@ -4,10 +4,12 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const imageCtrl = require('../controllers/image');
 
-router.post('/:userId', auth, imageCtrl.postImage);
-router.get('/:userId/:imageId', auth, imageCtrl.getOneImage);
-router.get('/:userId/', auth, imageCtrl.getAllImages);
-router.put('/:userId/:imageId', auth, imageCtrl.modifyImage);
-router.delete('/:userId/:imageId', auth, imageCtrl.deleteImage);
+router.post('/', auth, imageCtrl.postImage);
+router.get('/:id', auth, imageCtrl.getOneImage);
+router.put('/:id', auth, imageCtrl.modifyImage);
+router.delete('/:id', auth, imageCtrl.deleteImage);
+
+router.get('/my-library', auth, imageCtrl.getAllImages);
+//router.get('/shared-with-me', auth);
 
 module.exports = router;

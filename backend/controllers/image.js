@@ -1,81 +1,58 @@
+const mongoose = require('mongoose');
+const ObjectId = require('mongodb').ObjectId;
+
+var db = mongoose.connection;
+var Images = db.collection('Images');
 const Image = require('../models/Image');
 
-exports.createImage = (req, res, next) => {
+exports.postImage = (req, res, next) => {
+    console.log(req.body);
     delete req.body._id;
     const image = new Image({
       ...req.body
     });
-    image.save().then( () => { 
-      res.status(201).json({ message: 'Post saved successfully!' });
-    }
-    ).catch(
-      (error) => {
-        res.status(400).json({ error: error });
-      }
-    );
+    console.log(image);
+    Images.insertOne(image)
+    .then( () => { res.status(201).json({ message: 'Image saved !' }); })
+    .catch( (error) => { res.status(400).json({ error: error }); });
 };
 
 exports.getOneImage = (req, res, next) => {
-  Image.findOne({
-    _id: req.params.id
-  }).then(
-    (image) => {
-      res.status(200).json(image);
+  Images.findOne({ _id: ObjectId(req.params.id) })
+  .then( (image) => { 
+    if(!image){
+      return res.status(401).json('Image not found !');
     }
-  ).catch(
-    (error) => {
-      res.status(404).json({ error: error });
-    }
-  );
-};
-
-exports.getAllImages = (req, res, next) => {
-
-  
+    res.status(200).json(image); })
+  .catch( (error) => { res.status(404).json({ error: error});});
 };
 
 exports.modifyImage = (req, res, next) => {
-  const image = new Image({
-    _id: req.params.id,
-    caption: req.body.caption,
-    url: req.body.url,
-    userId: req.body.userId,
-  });
-  Image.updateOne({_id: req.params.id}, image).then(
-    () => {
-      res.status(201).json({
-        message: 'Image updated successfully!'
-      });
+  Images.findOneAndUpdate({_id: req.params.id}, {$set: {...req.body, _id: ObjectId(req.params.id)} })
+  .then( (image) => { 
+    if(!image.value ){
+      return res.status(401).json('Image not found !');
     }
-  ).catch(
-    (error) => {
-      res.status(400).json({ error: error });
-    }
-  );
+    res.status(201).json({ message: 'Image updated !'});
+  })
+  .catch(error => { res.status(400).json({ error: error });});
 };
 
 exports.deleteImage = (req, res, next) => {
-  Image.deleteOne({_id: req.params.id}).then(
-    () => {
-      res.status(200).json({
-        message: 'Image successfully deleted !'
-      });
+  Images.findOneAndDelete({_id: ObjectId(req.params.id)})
+  .then( (image) => {
+    if(!image.value){
+      return res.status(401).json('Image not found !');
     }
-  ).catch(
-    (error) => {
-      res.status(400).json({ error: error });
-    }
-  );
+    res.status(200).json({ message: 'Image deleted !'});
+  })
+  .catch(error => { res.status(400).json({ error: error });});
 };
 
 exports.getAllImages = (req, res, next) => {
-  Image.find().then(
-    (images) => {
+  Images.find({userId: ObjectId(req.query.userId)})
+  .then((images) => {
       res.status(200).json(images);
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({ error: error });
-    }
-  );
-};
+    })
+    .catch(error => { res.status(400).json({ error: error }); });
+  };

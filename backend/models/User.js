@@ -8,8 +8,8 @@ const userSchema = mongoose.Schema({
     email : { type: String, required: true, unique: true},
     password : { type: String, required: true},
     friends : [{
-        email : String,
-        status : Number,
+        email : {type: String},
+        status : {type: Number},
     }],
 });
 

@@ -8,7 +8,7 @@ var Users = db.collection('Users');
 const User = require('../models/User');
 
 exports.getAllUsers = (req,res,next) =>{
-  User.find().then(
+  Users.find().then(
     (users) => {
       res.status(200).json(users);
     }
@@ -86,7 +86,6 @@ exports.updateUser = (req,res,next) => {
       if(!user){
         return res.status(401).json('User not found !');
       }
-      console.log(user);
       res.status(200).json({ message: 'User updated' })
     })
     .catch(error => res.status(400).json({ error }))
