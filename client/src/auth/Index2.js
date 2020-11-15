@@ -1,16 +1,20 @@
-export const signup = user => {
+import React, { Component } from 'react';
+
+export default{
+signup : function(user) {
   return fetch(`${process.env.REACT_APP_API_URL}/signup`, {
     method: 'POST',
     headers: {
+      Accept: 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(user)
   })
     .then(res => res.json())
+    .catch(err => console.log(err));
+},
 
-};
-
-export const signin = user => {
+signin : function(user)  {
   return fetch(`${process.env.REACT_APP_API_URL}/signin`, {
     method: 'POST',
     headers: {
@@ -21,31 +25,32 @@ export const signin = user => {
   })
     .then(res => res.json())
     .catch(err => console.log(err));
-};
+},
 
-export const authenticate = (jwt, next) => {
+authenticate : function(jwt, next)  {
   if (typeof window != 'undefined') {
     localStorage.setItem('jwt', JSON.stringify(jwt));
     next();
   }
-};
+},
 
-export const isAuthenticate = () => {
+isAuthenticate : function()  {
   let jwt = localStorage.jwt;
   if (jwt) return JSON.parse(jwt);
   return false;
-};
+},
 
-export const signout = next => {
+signout : function(next)  {
   if (typeof window !== 'undefined') localStorage.removeItem('jwt');
   next();
   return fetch(`${process.env.REACT_APP_API_URL}/signout`, { method: 'POST' })
     .then(res => res.json())
     .catch(err => console.log(err));
-};
+},
 
 //check path
-export const isActive = (history, path) => {
+isActive : function(history, path)  {
   if (history.location.pathname === path) return { color: '#ff9900' };
   return {};
-};
+}
+}

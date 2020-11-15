@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { signup } from '../auth';
+import { signup } from '../auth/index.js';
 import { Link } from 'react-router-dom';
 
 class Signup extends Component {
@@ -13,6 +13,7 @@ class Signup extends Component {
       success: false
     };
   }
+
 
   handleChange = name => e =>
     this.setState({ [name]: e.target.value, error: '' });
