@@ -1,40 +1,51 @@
+const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 const uniqueValidator = require('mongoose-unique-validator');
 
-const { ObjectId } = mongoose.Schema;
 const userSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    trim: true,
-    require: true
+  user: {
+    firstName: {type: String, trim: true, require: true},
+    lastName: {type: String, trim: true, require: true},
+    pseudo: {type: String, trim: true, require: true},
+    photo: {
+      data: {type: Buffer},
+      contentType: {type: String}
+    }
   },
-  lastName: {
-    type: String,
-    trim: true,
-    require: true
+  
+  auth: {
+    email: {type: String, trim: true, require: true},
+    password: {type: String, require: true}
   },
-  email: {
-    type: String,
-    trim: true,
-    require: true
-  },
-  password: {
-    type: String,
-    require: true
-  },
-  pseudo: {
-    type: String,
-    trim: true,
-    require: true
-  },
-  photo: {
-    data: Buffer,
-    contentType: String
-  },
+
   location:{
-    lat: Number,
-    long: Number
+    lat: {type: Number},
+    long: {type: Number},
+    date: {type: Date, default: Date.now}
+  }, 
+
+  friends: {
+    friendRequests: [
+      {
+        friendId: {type: ObjectId},
+        date: {type: Date}
+      }
+    ],
+    friendPending: [
+      {
+        userId: {type: ObjectId},
+        date: {type: Date}
+      }
+    ],
+    friendGroups: [
+      {
+        groupId: {type: ObjectId},
+        name: {type: String, require: true},
+        members: [ {type: ObjectId, ref: 'User'} ]
+      }
+    ]
   }
+
 });
 
 userSchema.plugin(uniqueValidator);
