@@ -7,16 +7,17 @@ var db = mongoose.connection;
 var Users = db.collection('Users');
 const User = require('../models/User');
 
-exports.getAllUsers = (req,res,next) =>{
-  User.find().then(
-    (users) => {
+exports.loadUserById = (req,res,next, id) =>{
+  Users.findOne( {_id: ObjectId(id)} ).then(
+    user => {
+      if(!user){
+        return res.status(400).json({error: 'User not found'})
+      }
+      req.profile = user;
       res.status(200).json(users);
+      next();
     }
-  ).catch(
-    (error) => {
-      res.status(400).json({ error: error });
-    }
-  );
+  ).catch(error => { res.status(400).json({ error: error });});
 };
 
 /**************************** CONNECTION ****************************/
@@ -71,32 +72,26 @@ exports.login = (req, res, next) => {
 /**************************** ACCOUNT INFO ****************************/
 
 exports.updateUser = (req,res,next) => {
-    let userId = req.params.id;
-    let newUser = new User( {...req.body, _id: ObjectId(userId)} );
-    console.log(newUser);
-    if( newUser.password !==undefined ){    
-      bcrypt.hash(req.body.password, 10)
+    let user = req.profile;
+    let update = req.body;
+    if( !bcrypt.compare(update.password, user.password) ){    
+      bcrypt.hash(update.password, 10)
       .then(hash => {
-        delete newUser.password;
-        newUser.password = hash;
+        delete update.password;
+        update.password = hash;
       }).catch(error => res.status(500).json({ error }))
     }
-    Users.findOneAndUpdate( {_id: ObjectId(userId)}, newUser )
-    .then(user => {
-      if(!user){
-        return res.status(401).json('User not found !');
-      }
-      console.log(user);
-      res.status(200).json({ message: 'User updated' })
+    Users.updateOne({_id: ObjectId(user._id)}, { $set: updatedUser })
+    .then( updatedUser => { 
+        res.status(200).json(updatedUser);
     })
-    .catch(error => res.status(400).json({ error }))
+    .catch(error => res.status(400).json({error}));
 };
 
 exports.deleteUser = (req, res,next) =>{
-    Users.findOneAndDelete({ _id: ObjectId(req.params.id) })
+    Users.findOneAndDelete({ _id: ObjectId(req.profile._id) })
     .then(() => res.status(200).json({ message: 'User deleted !'}))
     .catch(error => res.status(400).json({ error }));
-    console.log({...res.body});
 };
 
 /**************************** FRIENDS ****************************/

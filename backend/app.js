@@ -7,7 +7,7 @@ const port = 8800;
 const app = express();
 
 const userRoutes = require('./routes/user');
-const imageRoutes = require('./routes/image');
+const postRoutes = require('./routes/post');
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 });
 
 // Connexion à MongoDB
-mongoose.connect('mongodb+srv://padol_usr:S9_PaDoL_MMK@padolcluster.pn3hp.mongodb.net/<dbname>?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://padol_usr:S9_PaDoL_MMK@padolcluster.pn3hp.mongodb.net/PadolDB?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true })
@@ -28,19 +28,8 @@ mongoose.connect('mongodb+srv://padol_usr:S9_PaDoL_MMK@padolcluster.pn3hp.mongod
 // Lecture des corps de requête en json 
 app.use(bodyParser.json());
 
-var ctn = 0;
-app.use('/test', (req,res, next)=>{
-   ctn++;
-   if(ctn<4){
-       res.send('./itachi.png');
-   }
-   else{
-       res.send('Compteur dépassé');
-   }
-})
-
 app.use('/user', userRoutes);
-app.use('/image', imageRoutes);
+app.use('/post', postRoutes);
 
 
 app.listen(port, ()=> {console.log('Server listening on port '+ port);});

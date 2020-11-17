@@ -1,8 +1,12 @@
-const Image = require('../models/Image');
+const mongoose = require('mongoose');
+const Post = require('../models/Post');
 
-exports.createImage = (req, res, next) => {
+var db = mongoose.connection;
+var Posts = db.collection('Posts');
+
+exports.createPost = (req, res, next) => {
     delete req.body._id;
-    const image = new Image({
+    const image = new Post({
       ...req.body
     });
     image.save().then( () => { 
@@ -15,8 +19,8 @@ exports.createImage = (req, res, next) => {
     );
 };
 
-exports.getOneImage = (req, res, next) => {
-  Image.findOne({
+exports.getOnePost = (req, res, next) => {
+  Posts.findOne({
     _id: req.params.id
   }).then(
     (image) => {
@@ -29,19 +33,15 @@ exports.getOneImage = (req, res, next) => {
   );
 };
 
-exports.getAllImages = (req, res, next) => {
 
-  
-};
-
-exports.modifyImage = (req, res, next) => {
-  const image = new Image({
+exports.editPost = (req, res, next) => {
+  const post = new Post({
     _id: req.params.id,
     caption: req.body.caption,
     url: req.body.url,
     userId: req.body.userId,
   });
-  Image.updateOne({_id: req.params.id}, image).then(
+  Posts.updateOne({_id: req.params.id}, image).then(
     () => {
       res.status(201).json({
         message: 'Image updated successfully!'
@@ -54,8 +54,8 @@ exports.modifyImage = (req, res, next) => {
   );
 };
 
-exports.deleteImage = (req, res, next) => {
-  Image.deleteOne({_id: req.params.id}).then(
+exports.deletePost = (req, res, next) => {
+  Posts.deleteOne({_id: req.params.id}).then(
     () => {
       res.status(200).json({
         message: 'Image successfully deleted !'
@@ -68,8 +68,8 @@ exports.deleteImage = (req, res, next) => {
   );
 };
 
-exports.getAllImages = (req, res, next) => {
-  Image.find().then(
+exports.getAllPosts = (req, res, next) => {
+  Posts.find().then(
     (images) => {
       res.status(200).json(images);
     }
