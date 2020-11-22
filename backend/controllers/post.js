@@ -95,3 +95,38 @@ exports.getAllPosts = (req, res, next) => {
     }
   );
 };
+
+exports.updateViews = (req, res, next) => {
+  let imageId = req.body._id;
+  //Trouver l'image dans la Database
+  Posts.findOne({ _id: ObjectId(imageId) })
+  .then(image => {
+    if (!image) {
+      return res.status(401).json({ error: 'no image !' });
+    } else {
+
+      //Vérification que views existe
+      if (!image.views) {
+        image.views =  "0";
+      };
+
+      //Dépassement de viewsLimit
+      if (image.views >= image.viewsLimit) {
+        Posts.deleteOne(image);
+        return res.status(401).json('image destroyed !');
+      }
+
+      //Incrémentation de views
+      else {
+        image.views++;
+        Posts.findOneAndUpdate({ _id: ObjectId(imageId) }, { $set: image })
+        .then(image => {
+          if (!image) { return res.status(401).json('image not found !'); }
+          res.status(200).json({ message: 'views incremented' })
+        })
+        .catch(error => res.status(400).json({ error }))
+      }
+      res.status(200).json({ message: 'image found' });
+    }
+  });
+};
