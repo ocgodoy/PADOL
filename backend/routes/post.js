@@ -9,6 +9,6 @@ router.get('/:userId/:imageId', auth, imageCtrl.getOnePost);
 router.get('/:userId/', auth, imageCtrl.getAllPosts);
 router.put('/:userId/:imageId', auth, imageCtrl.editPost);
 router.delete('/:userId/:imageId', auth, imageCtrl.deletePost);
-router.post('/:userId', auth, imageCtrl.updateViews);
+router.post('/:userId/:imageId', auth, imageCtrl.updateViews);
 
 module.exports = router;
