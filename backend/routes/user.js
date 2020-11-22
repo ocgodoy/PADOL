@@ -6,11 +6,12 @@ const userCtrl = require('../controllers/user');
 
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
-router.put('/:id/update', auth, userCtrl.updateUser);
-router.delete('/:id', auth, userCtrl.deleteUser);
-router.post('/:id/addFriend', auth, userCtrl.addFriend);
-router.delete('/:id/removeFriend', auth, userCtrl.deleteFriend);
-router.get('/:id/friends', auth, userCtrl.getAllFriends);
+router.get('/:userId/profile', auth, userCtrl.getUser);
+router.put('/:userId', auth, userCtrl.updateUser);
+router.delete('/:userId', auth, userCtrl.deleteUser);
+router.post('/:userId/addFriend', auth, userCtrl.addFriend);
+router.delete('/:userId/removeFriend', auth, userCtrl.deleteFriend);
+router.get('/:userId/friends', auth, userCtrl.getAllFriends);
 
 router.param('userId', userCtrl.loadUserById);
 

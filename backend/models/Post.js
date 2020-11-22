@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb');
 
 const postSchema = new mongoose.Schema({
 
-  userId: {type: ObjectId, ref: 'User'},
+  postedBy: {type: ObjectId, ref: 'User'},
 
   post: {
     title: {type: String},
@@ -32,13 +32,16 @@ const postSchema = new mongoose.Schema({
     expiryDate: {type: Date}
   },
   
-  likes: [{ type: ObjectId, ref: 'User' }],
+  likes: {
+    numberOfLikes: {type: Number, default: 0},
+    likers: [{ type: ObjectId, ref: 'User' }]
+  },
 
   comments: [
     {
       comment: {type: String},
-      date: { type: Date, default: Date.now() },
-      userId: { type: ObjectId, ref: 'User' }
+      date: { type: Date, default: Date.now },
+      author: { type: ObjectId, ref: 'User' }
     }
   ]
 });

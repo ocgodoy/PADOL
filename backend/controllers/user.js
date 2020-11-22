@@ -14,7 +14,7 @@ exports.loadUserById = (req,res,next, id) =>{
         return res.status(400).json({error: 'User not found'})
       }
       req.profile = user;
-      res.status(200).json(users);
+      res.status(200).json(user);
       next();
     }
   ).catch(error => { res.status(400).json({ error: error });});
@@ -28,12 +28,12 @@ exports.signup = (req, res, next) => {
       if(!user){
         bcrypt.hash(req.body.password, 10)
         .then(hash => {
-          const user = new User({
+          const newUser = new User({
             ...req.body
           })
-          delete user.password;
-          user.password = hash;
-          Users.insertOne(user)
+          delete newUser.password;
+          newUser.password = hash;
+          Users.insertOne(newUser)
             .then(() => res.status(201).json({ message: 'User created' }))
             .catch(error => res.status(400).json({ error }));
         })  
@@ -69,16 +69,25 @@ exports.login = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
+exports.logout = (res, req, next) =>{
+
+};
+
 /**************************** ACCOUNT INFO ****************************/
+exports.getUser = (req, res, next) => {
+    let user = req.profile; 
+    delete user.auth.password; 
+    res.status(200).json(user);
+};
 
 exports.updateUser = (req,res,next) => {
     let user = req.profile;
-    let update = req.body;
-    if( !bcrypt.compare(update.password, user.password) ){    
-      bcrypt.hash(update.password, 10)
+    let updatedUser = req.body;
+    if( updatedUser.password != undefined && !bcrypt.compare(updatedUser.password, user.password) ){    
+      bcrypt.hash(updatedUser.password, 10)
       .then(hash => {
-        delete update.password;
-        update.password = hash;
+        delete updatedUser.auth.password;
+        updatedUser.auth.password = hash;
       }).catch(error => res.status(500).json({ error }))
     }
     Users.updateOne({_id: ObjectId(user._id)}, { $set: updatedUser })
@@ -89,7 +98,8 @@ exports.updateUser = (req,res,next) => {
 };
 
 exports.deleteUser = (req, res,next) =>{
-    Users.findOneAndDelete({ _id: ObjectId(req.profile._id) })
+    let user = req.profile;
+    Users.deleteOne({ _id: ObjectId(user._id) })
     .then(() => res.status(200).json({ message: 'User deleted !'}))
     .catch(error => res.status(400).json({ error }));
 };
@@ -105,5 +115,11 @@ exports.deleteFriend = (req,res,next) => {
 };
 
 exports.getAllFriends = (req, res, next) => {
-
+    let user = req.profile;
+    let friendGroups = user.friends.friendGroups;
+    let allFriends = [];
+    for( group of friendGroups ){
+      allFriends.concat(group.members);
+    }
+    return allFriends;
 };
