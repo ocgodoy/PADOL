@@ -30,14 +30,12 @@ exports.signup = (req, res, next) => {
         console.log('email is available')
         let newUser = new User(req.body);
         console.log(newUser);
-        let passwordEncrypted = newUser.encryptPassword();
-        if(passwordEncrypted){
+        newUser.encryptPassword(newUser => {
+          console.log(newUser);
           Users.insertOne(newUser)
           .then(() => res.status(201).json({ message: 'User created' }))
           .catch(error => res.status(400).json({ error }));
-        } else {
-          res.status(401).json({error: 'Password encryption failed'});
-        }
+        });   
       } else {
         return res.status(401).json({ error: 'User already exists !' });
       }

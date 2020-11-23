@@ -50,19 +50,20 @@ const userSchema = new mongoose.Schema({
 
 });
 
-userSchema.methods.encryptPassword = async function() {
+userSchema.methods.encryptPassword = function(callback) {
     console.log(this.auth.password);
-    bcrypt.hash(this.auth.password, 10, (err, hashedPassword) => {
-      if(err){
-        console.error(err);
-        return false;
-      }
-      delete this.auth.password;
-      console.log(this.auth.password);
-      this.auth.password = hashedPassword;
-      console.log(this.auth.password);
-      return true;
-    })
+    bcrypt.genSalt(10, (err, salt) => {
+      console.log('salt has been generated successfully');
+      bcrypt.hash(this.auth.password, salt, (err, hash) => {
+        if(err){
+          console.error(err);
+          return
+        } 
+        this.auth.password = hash;
+        console.log(this.auth.password);
+        callback(this);
+      })
+    })      
 }
 
 userSchema.plugin(uniqueValidator);
