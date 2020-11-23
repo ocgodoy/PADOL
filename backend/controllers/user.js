@@ -23,21 +23,21 @@ exports.loadUserById = (req,res,next, id) =>{
 /**************************** CONNECTION ****************************/
 
 exports.signup = (req, res, next) => {
-    Users.findOne({ email: req.body.email })
+
+    Users.findOne({'auth.email': req.body.auth.email })
     .then( user => {
       if(!user){
-        bcrypt.hash(req.body.password, 10)
-        .then(hash => {
-          const newUser = new User({
-            ...req.body
-          })
-          delete newUser.password;
-          newUser.password = hash;
+        console.log('email is available')
+        let newUser = new User(req.body);
+        console.log(newUser);
+        let passwordEncrypted = newUser.encryptPassword();
+        if(passwordEncrypted){
           Users.insertOne(newUser)
-            .then(() => res.status(201).json({ message: 'User created' }))
-            .catch(error => res.status(400).json({ error }));
-        })  
-        .catch(error => res.status(500).json({ error }));
+          .then(() => res.status(201).json({ message: 'User created' }))
+          .catch(error => res.status(400).json({ error }));
+        } else {
+          res.status(401).json({error: 'Password encryption failed'});
+        }
       } else {
         return res.status(401).json({ error: 'User already exists !' });
       }
@@ -116,10 +116,13 @@ exports.deleteFriend = (req,res,next) => {
 
 exports.getAllFriends = (req, res, next) => {
     let user = req.profile;
+    res.status(200).json(user);
+    /*
     let friendGroups = user.friends.friendGroups;
     let allFriends = [];
     for( group of friendGroups ){
       allFriends.concat(group.members);
     }
     return allFriends;
+    */
 };

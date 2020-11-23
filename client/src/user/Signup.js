@@ -21,7 +21,10 @@ class Signup extends Component {
   clickSubmit = e => {
     e.preventDefault();
     const { name, email, password } = this.state;
-    const user = { name, email, password };
+    const user = { 
+      user: {name},
+      auth: { email, password }
+    };
     signup(user).then(res => {
       if (res.err) this.setState({ error: res.err });
       else {
