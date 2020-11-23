@@ -22,7 +22,7 @@ class Signin extends Component {
     const user = { email, password };
     this.setState({ loading: true });
     signin(user).then(res => {
-      if (res.err) this.setState({ error: res.err, loading: false });
+      if (res.error) this.setState({ error: res.error, loading: false });
       else {
         //authenticate
         //redirect
