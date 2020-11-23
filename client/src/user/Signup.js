@@ -6,9 +6,12 @@ class Signup extends Component {
   constructor() {
     super();
     this.state = {
-      name: '',
+      firstName: '',
+      lastName: '',
       email: '',
       password: '',
+      pseudo: '',
+      location: '',
       error: '',
       success: false
     };
@@ -20,18 +23,19 @@ class Signup extends Component {
 
   clickSubmit = e => {
     e.preventDefault();
-    const { name, email, password } = this.state;
-    const user = { 
-      user: {name},
-      auth: { email, password }
-    };
-    signup(user).then(res => {
+    const { firstName, lastName, email, password, pseudo } = this.state;
+    const user = { firstName, lastName, pseudo };
+    const auth = {email, password};
+    const newUser = {user:user,auth:auth};
+    signup(newUser).then(res => {
       if (res.err) this.setState({ error: res.err });
       else {
         this.setState({
-          name: '',
+          firstName: '',
+          lastName: '',
           email: '',
           password: '',
+          pseudo: '',
           error: '',
           success: true
         });
@@ -39,13 +43,22 @@ class Signup extends Component {
     });
   };
 
-  signUpForm = (name, email, password) => (
+  signUpForm = (firstName, lastName, email, password, pseudo) => (
     <form>
       <div className='form-group'>
-        <label className='text-muted'>Name</label>
+        <label className='text-muted'>First Name</label>
         <input
-          onChange={this.handleChange('name')}
-          value={name}
+          onChange={this.handleChange('firstName')}
+          value={firstName}
+          type='text'
+          className='form-control'
+        />
+      </div>
+      <div className='form-group'>
+        <label className='text-muted'>Last Name</label>
+        <input
+          onChange={this.handleChange('lastName')}
+          value={lastName}
           type='text'
           className='form-control'
         />
@@ -68,6 +81,15 @@ class Signup extends Component {
           className='form-control'
         />
       </div>
+      <div className='form-group'>
+        <label className='text-muted'>Pseudo</label>
+        <input
+          onChange={this.handleChange('pseudo')}
+          value={pseudo}
+          type='text'
+          className='form-control'
+        />
+      </div>
       <button onClick={this.clickSubmit} className='btn btn-raised btn-primary'>
         Submit
       </button>
@@ -75,7 +97,7 @@ class Signup extends Component {
   );
 
   render() {
-    const { name, email, password, error, success } = this.state;
+    const { firstName, lastName, email, password, pseudo, error, success } = this.state;
     return (
       <div className='container'>
         <h2 className='mt-5 mb-5'>Sign up</h2>
@@ -93,7 +115,7 @@ class Signup extends Component {
           <Link to='/signin'>Signin</Link>!!!
         </div>
 
-        {this.signUpForm(name, email, password)}
+        {this.signUpForm(firstName, lastName, email, password, pseudo)}
       </div>
     );
   }

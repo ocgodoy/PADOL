@@ -1,5 +1,5 @@
 export const signup = user => {
-  return fetch(`${process.env.REACT_APP_API_URL}/signup`, {
+  return fetch(`${process.env.REACT_APP_API_URL}/user/signup`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -11,7 +11,7 @@ export const signup = user => {
 };
 
 export const signin = user => {
-  return fetch(`${process.env.REACT_APP_API_URL}/signin`, {
+  return fetch(`${process.env.REACT_APP_API_URL}/user/login`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -31,6 +31,7 @@ export const authenticate = (jwt, next) => {
 };
 
 export const isAuthenticate = () => {
+  //localStorage.clear();
   let jwt = localStorage.jwt;
   if (jwt) return JSON.parse(jwt);
   return false;
