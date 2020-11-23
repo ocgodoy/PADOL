@@ -51,16 +51,13 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.encryptPassword = function(callback) {
-    console.log(this.auth.password);
     bcrypt.genSalt(10, (err, salt) => {
-      console.log('salt has been generated successfully');
       bcrypt.hash(this.auth.password, salt, (err, hash) => {
         if(err){
           console.error(err);
           return
         } 
         this.auth.password = hash;
-        console.log(this.auth.password);
         callback(this);
       })
     })      

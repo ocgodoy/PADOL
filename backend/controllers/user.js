@@ -23,15 +23,15 @@ exports.loadUserById = (req,res,next, id) =>{
 /**************************** CONNECTION ****************************/
 
 exports.signup = (req, res, next) => {
-    console.log("Tentative d'inscription \n")
+    //console.log("Tentative d'inscription \n")
     Users.findOne({'auth.email': req.body.auth.email })
     .then( user => {
       if(!user){
-        console.log('email is available')
+        //console.log('email is available')
         let newUser = new User(req.body);
-        console.log(newUser);
+        //console.log(newUser);
         newUser.encryptPassword(newUser => {
-          console.log(newUser);
+          //console.log(newUser);
           Users.insertOne(newUser)
           .then(() => res.status(201).json({ message: 'User created' }))
           .catch(error => res.status(400).json({ error }));
