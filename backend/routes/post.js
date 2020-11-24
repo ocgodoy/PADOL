@@ -5,7 +5,7 @@ const auth = require('../middleware/auth');
 const postCtrl = require('../controllers/post');
 const {loadUserById} = require('../controllers/user');
 
-router.post('/:userId', auth, postCtrl.createPost);
+router.post('/', auth, postCtrl.createPost);
 router.get('/:userId/:imageId', auth, postCtrl.getOnePost);
 router.get('/:userId/', auth, postCtrl.getAllPosts);
 router.get('/', postCtrl.getFeedPosts);

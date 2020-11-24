@@ -43,28 +43,28 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-    console.log("Tentative de connexion \n")
+    //console.log("Tentative de connexion \n")
     Users.findOne({ 'auth.email': req.body.email })
-    .then(user => {
+    .then( user => {
       if (!user) {
         return res.status(401).json({ error: 'User not found' });
       }
       bcrypt.compare(req.body.password, user.auth.password)
-        .then(valid => {
-          console.log("test reussi \n")
-          if (!valid) {
-            return res.status(401).json({ error: 'Incorrect password' });
-          }
-          res.status(200).json({
-            user: {_id: user._id, email: user.auth.email,pseudo:user.user.pseudo},
-            token: jwt.sign(
-                { _id: user._id },
-                'RANDOM_TOKEN_SECRET',
-                { expiresIn: '24h' }
-            )
-          });
-        })
-        .catch(error => res.status(500).json({ error:"Problem" }));
+      .then(valid => {
+        //console.log("test reussi \n")
+        if (!valid) {
+          return res.status(401).json({ error: 'Incorrect password' });
+        }
+        res.status(200).json({
+          user: {_id: user._id, email: user.auth.email,pseudo:user.user.pseudo},
+          token: jwt.sign(
+              { _id: user._id },
+              'RANDOM_TOKEN_SECRET',
+              { expiresIn: '24h' }
+          )
+        });
+      })
+      .catch(error => res.status(500).json({ error:"Problem" }));
     })
     .catch(error => res.status(500).json({ error:"Problem" }));
 };
