@@ -31,6 +31,7 @@ class NewPost extends Component {
     let fileSize = name === 'photo' ? e.target.files[0].size : 0;
     this.postData.set(name, value);
     this.setState({ [name]: value, error: '', fileSize });
+    console.log("New post value data" + this.postData.get('photo') )
   };
 
   clickSubmit = e => {
