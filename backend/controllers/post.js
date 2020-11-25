@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Post = require('../models/Post');
+const formidable = require('formidable');
 //const {getAllFriends} = require('./user');
 
 var db = mongoose.connection;
@@ -22,23 +23,53 @@ exports.loadPostById = (req, res, next) => {
 
 exports.createPost = (req, res, next) => {
     console.log("Create post demandé \n")
-    console.log(req.body)
-    delete req.body._id;
+    //console.log(req.body)
+    //console.log(req.query)
+    //delete req.body._id;
+    let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+  form.parse(req, (err, fields, files) => {
     var post_test= {post:{}, view:{}};
-    post_test.post.title = "Voyage Marseille"
-    post_test.post.caption  = "Avec les potes"
-    post_test.post.url = "http://test"
-    post_test.postedBy = ObjectId("5fbdcc5d42682316503994eb")
-    post_test.view.viewsLimit = 4
-    const post = new Post({
-      //...req.body
-      ...post_test
-    });
+    post_test.post.title = fields.title
+    post_test.post.caption  = fields.caption
+    post_test.post.url = fields.photo
+    //post_test.postedBy = ObjectId("5fbdcc5d42682316503994eb")
+    post_test.view.viewsLimit = fields.viewsLimit
+    console.log(JSON.stringify(post_test))
+    if (err) {
+      return res.status(400).json({
+        err: 'Image could not be uploaded'
+      });
+    }
+    let post = new Post({...post_test});
+    //req.profile.hashed_password = undefined;
+    //req.profile.salt = undefined;
+    //post.postedBy = req.profile;
+    if (files.photo) {
+      //post.photo.data = fs.readFileSync(files.photo.path);
+      //post.photo.contentType = files.photo.type;
+    }
     Posts.insertOne(post)
     .then( () => {
       res.status(201).json({ message: 'Post saved successfully!' });
     })
     .catch(error => {res.status(400).json({ error: error });});
+  });
+    //var post_test= {post:{}, view:{}};
+    //post_test.post.title = "Voyage Marseille"
+    //post_test.post.caption  = "Avec les potes"
+    //post_test.post.url = "http://test"
+    //post_test.postedBy = ObjectId("5fbdcc5d42682316503994eb")
+    //post_test.view.viewsLimit = 4
+    //const post = new Post({
+      //...req.body
+    //  ...post_test
+    //});
+    //Posts.insertOne(post)
+    //.then( () => {
+    //  res.status(201).json({ message: 'Post saved successfully!' });
+    //})
+    //.catch(error => {res.status(400).json({ error: error });});
 };
 
 exports.getOnePost = (req, res, next) => {
