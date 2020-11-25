@@ -9,7 +9,7 @@ class NewPost extends Component {
     super();
     this.state = {
       title: '',
-      content: '',
+      caption: '',
       photo: '',
       user: {},
       redirectToProfile: false,
@@ -36,9 +36,15 @@ class NewPost extends Component {
     if (this.isValid()) {
       this.setState({ loading: true });
       const { user } = this.state;
+      const {title,caption,photo} = this.postData;
+      const content = {title, caption, photo};
+      const newPost = { 
+        postedBy: user,
+        content: content
+      }
       const token = isAuthenticate().token;
 
-      createPost(user._id, token, this.postData).then(res => {
+      createPost(user._id, token, newPost).then(res => {
         if (res.err) console.log(res.err);
         else {
           this.setState({ redirectToProfile: true });
@@ -48,21 +54,21 @@ class NewPost extends Component {
   };
 
   isValid = () => {
-    const { title, content, fileSize } = this.state;
+    const { title, caption, fileSize } = this.state;
     if (fileSize > 300000) {
       this.setState({ error: 'File size should be less than 300kb ' });
       return false;
-    } else if (title.length === 0 || content.length === 0) {
+    } else if (title.length === 0 || caption.length === 0) {
       this.setState({ error: 'All field is required' });
       return false;
     }
     return true;
   };
 
-  newPostForm = (title, content) => (
+  newPostForm = (title, caption) => (
     <form>
       <div className='form-group'>
-        <label className='text-muted'>Profile Photo</label>
+        <label className='text-muted'>Photo</label>
         <input
           onChange={this.handleChange('photo')}
           type='file'
@@ -81,10 +87,10 @@ class NewPost extends Component {
         />
       </div>
       <div className='form-group'>
-        <label className='text-muted'>content</label>
+        <label className='text-muted'>Caption</label>
         <input
-          onChange={this.handleChange('content')}
-          value={content}
+          onChange={this.handleChange('caption')}
+          value={caption}
           type='text'
           className='form-control'
         />
@@ -98,7 +104,7 @@ class NewPost extends Component {
   render() {
     const {
       title,
-      content,
+      caption,
       redirectToProfile,
       user,
       error,
@@ -129,7 +135,7 @@ class NewPost extends Component {
                     alt={name}
                 /> */}
 
-        {this.newPostForm(title, content)}
+        {this.newPostForm(title, caption)}
       </div>
     );
   }

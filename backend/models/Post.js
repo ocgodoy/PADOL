@@ -5,10 +5,10 @@ const postSchema = new mongoose.Schema({
 
   postedBy: {type: ObjectId, ref: 'User'},
 
-  post: {
+  content: {
     title: {type: String},
     caption: {type: String},
-    url: {type: String, require: true}
+    photo: {type: String, require: true}
   },
   
   views: {

@@ -39,15 +39,13 @@ exports.getOnePost = (req, res, next) => {
 };
 
 exports.getFeedPosts = (req, res, next) => {
-    let allFriends = getAllFriends(req,res,next);
-    let feed = [];
-    for( friend of allFriends ){
-      Posts.find({postedBy: friend._id})
-      .then(posts => {
-        feed.concat(posts);
-      })
-    }
-    res.status(200).send(feed);
+  Post.find()
+  .populate('postedBy', '_id user')
+  .populate('comments.author', '_id user')
+  .select('_id postedBy content likes comments')
+  .sort({ 'date.uploadDate': -1 })
+  .then(posts => res.status(200).json(posts))
+  .catch(error => res.status(400).json({ error }));
 };
 
 exports.editPost = (req, res, next) => {

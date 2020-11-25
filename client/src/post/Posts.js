@@ -13,7 +13,7 @@ class Posts extends Component {
 
   componentDidMount() {
     getAllPost().then(data => {
-      if (data.err) console.log(data.err);
+      if (data.error) console.log(data.error);
       else this.setState({ posts: data });
     });
   }
@@ -23,10 +23,10 @@ class Posts extends Component {
       <div className='row'>
         {posts.map(post => {
           let photoUrl = post
-            ? `${process.env.REACT_APP_API_URL}/post/photo/${post._id}`
+            ? `${process.env.REACT_APP_API_URL}/post/:${post._id}`
             : DefaultAvatar;
           const posterId = post.postedBy ? post.postedBy._id : '';
-          const posterName = post.postedBy ? post.postedBy.name : 'Unknown';
+          const posterName = post.postedBy ? post.postedBy.user.pseudo : 'Unknown';
           return (
             <div className='card col-md-3 mr-5 mb-5' key={post._id}>
               <img
@@ -37,7 +37,7 @@ class Posts extends Component {
                 alt='Card image cap'
               />
               <div className='card-body'>
-                <h5 className='card-title'>{post.title}</h5>
+                <h5 className='card-title'>{post.content.title}</h5>
                 <p className='card-text'>{post.content.substring(0, 50)}</p>
                 <br />
                 <p className='font-italic mark'>
