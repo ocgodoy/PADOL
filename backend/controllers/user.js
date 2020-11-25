@@ -16,6 +16,17 @@ exports.loadUserById = (req,res,next, id) =>{
       req.profile = user;
       res.status(200).json(user);
       next();
+    })
+};
+
+exports.getAllUsers = (req,res,next) =>{
+  Users.find().then(
+    (users) => {
+      res.status(200).json(users);
+    }
+  ).catch(
+    (error) => {
+      res.status(400).json({ error: error });
     }
   ).catch(error => { res.status(400).json({ error: error });});
 };
