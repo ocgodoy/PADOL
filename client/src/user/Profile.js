@@ -13,6 +13,8 @@ class Profile extends Component {
     super();
     this.state = {
       user: { following: [], followers: [] },
+      auth: {},
+      location:{},
       redirectToSignin: false,
       following: false,
       error: '',
@@ -20,26 +22,9 @@ class Profile extends Component {
     };
   }
 
-  checkFollow = user => {
-    const jwt = isAuthenticate();
-    const match = user.followers.find(follower => {
-      return follower._id === jwt.user._id;
-    });
-    return match;
-  };
 
-  clickFollowButton = callApi => {
-    const userId = isAuthenticate().user._id;
-    const token = isAuthenticate().token;
 
-    callApi(userId, token, this.state.user._id).then(data => {
-      if (data.error) {
-        this.setState({ error: data.error });
-      } else {
-        this.setState({ user: data, following: !this.state.following });
-      }
-    });
-  };
+
 
   // initialize user's data
   init = userId => {
@@ -51,9 +36,11 @@ class Profile extends Component {
           this.setState({ redirectToSignin: true });
         } else {
           console.log(data);
-          let following = this.checkFollow(data);
-          this.setState({ user: data, following });
-          this.loadPosts(data._id);
+
+          this.setState({ user: data.user });
+          this.setState({ auth: data.auth });
+          this.setState({ location: data.location });
+          //this.loadPosts(data._id);
         }
       });
   };
@@ -82,7 +69,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { redirectToSignin, user, posts } = this.state;
+    const { redirectToSignin, user, posts, auth, location} = this.state;
     if (redirectToSignin) return <Redirect to='/signin' />;
 
     const photoUrl = user._id
@@ -107,9 +94,9 @@ class Profile extends Component {
 
           <div className='col-md-6'>
             <div className='lead mt-2'>
-              <p>Hello, {user.name}</p>
-              <p>Email: {user.email}</p>
-              <p>{`Joined ${new Date(user.created).toDateString()}`}</p>
+              <p>Hello, {user.pseudo}</p>
+              <p>Email: {auth.email}</p>
+              <p>{`Joined ${new Date(location.date).toDateString()}`}</p>
             </div>
 
             {isAuthenticate().user && isAuthenticate().user._id === user._id ? (
@@ -125,8 +112,8 @@ class Profile extends Component {
               </div>
             ) : (
               <FollowProfileButton
-                following={this.state.following}
-                onButtonClick={this.clickFollowButton}
+
+
               />
             )}
           </div>
@@ -134,12 +121,10 @@ class Profile extends Component {
         <div className='row'>
           <div className='col md-12 mt-5 mb-5'>
             <hr />
-            <p className='lead'>{user.about}</p>
+            <p className='lead'>user.about</p>
 
             <hr />
             <ProfileTabs
-              followers={user.followers}
-              following={user.following}
               posts={posts}
             />
           </div>

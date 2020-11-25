@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Post = require('../models/Post');
-const {getAllFriends} = require('./user');
+//const {getAllFriends} = require('./user');
 
 var db = mongoose.connection;
 var Posts = db.collection('Posts');
@@ -18,19 +18,31 @@ exports.loadPostById = (req, res, next) => {
   ).catch(error => { res.status(400).json({ error: error });});
 };
 
+
+
 exports.createPost = (req, res, next) => {
+    console.log("Create post demandé \n")
+    console.log(req.body)
     delete req.body._id;
+    var post_test= {post:{}, view:{}};
+    post_test.post.title = "Voyage Marseille"
+    post_test.post.caption  = "Avec les potes"
+    post_test.post.url = "http://test"
+    post_test.postedBy = ObjectId("5fbdcc5d42682316503994eb")
+    post_test.view.viewsLimit = 4
     const post = new Post({
-      ...req.body
+      //...req.body
+      ...post_test
     });
     Posts.insertOne(post)
-    .then( () => { 
+    .then( () => {
       res.status(201).json({ message: 'Post saved successfully!' });
     })
     .catch(error => {res.status(400).json({ error: error });});
 };
 
 exports.getOnePost = (req, res, next) => {
+  console.log("Get One post appellé \n")
   Posts.findOne({_id: req.params.id})
   .then( post => {
       res.status(200).json(post);
@@ -39,15 +51,15 @@ exports.getOnePost = (req, res, next) => {
 };
 
 exports.getFeedPosts = (req, res, next) => {
-    let allFriends = getAllFriends(req,res,next);
-    let feed = [];
-    for( friend of allFriends ){
-      Posts.find({postedBy: friend._id})
-      .then(posts => {
-        feed.concat(posts);
-      })
-    }
-    res.status(200).send(feed);
+    //let allFriends = getAllFriends(req,res,next);
+    //let feed = [];
+    //for( friend of allFriends ){
+    //  Posts.find({postedBy: friend._id})
+    //  .then(posts => {
+    //    feed.concat(posts);
+    //  })
+    //}
+    //res.status(200).send(feed);
 };
 
 exports.editPost = (req, res, next) => {
@@ -85,8 +97,10 @@ exports.deletePost = (req, res, next) => {
 };
 
 exports.getAllPosts = (req, res, next) => {
-  Posts.find().then(
-    (images) => {
+  console.log("Get all posts demandé \n")
+  console.log("body  " + JSON.stringify(req.body))
+  Posts.find().toArray().then(
+    (images) => { console.log("post: " + images)
       res.status(200).json(images);
     }
   ).catch(

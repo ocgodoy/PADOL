@@ -9,7 +9,9 @@ class NewPost extends Component {
     super();
     this.state = {
       title: '',
-      content: '',
+      caption: '',
+      viewsLimit:'',
+      timeLimit:'',
       photo: '',
       user: {},
       redirectToProfile: false,
@@ -39,7 +41,7 @@ class NewPost extends Component {
       const token = isAuthenticate().token;
 
       createPost(user._id, token, this.postData).then(res => {
-        if (res.err) console.log(res.err);
+        if (res.error) console.log(res.error);
         else {
           this.setState({ redirectToProfile: true });
         }
@@ -48,18 +50,18 @@ class NewPost extends Component {
   };
 
   isValid = () => {
-    const { title, content, fileSize } = this.state;
+    const { title, caption, fileSize, viewsLimit, timeLimit } = this.state;
     if (fileSize > 300000) {
       this.setState({ error: 'File size should be less than 300kb ' });
       return false;
-    } else if (title.length === 0 || content.length === 0) {
+    } else if (title.length === 0 || caption.length === 0 || viewsLimit.length === 0 || timeLimit.length === 0) {
       this.setState({ error: 'All field is required' });
       return false;
     }
     return true;
   };
 
-  newPostForm = (title, content) => (
+  newPostForm = (title, caption, viewsLimit, timeLimit) => (
     <form>
       <div className='form-group'>
         <label className='text-muted'>Profile Photo</label>
@@ -81,10 +83,28 @@ class NewPost extends Component {
         />
       </div>
       <div className='form-group'>
-        <label className='text-muted'>content</label>
+        <label className='text-muted'>caption</label>
         <input
-          onChange={this.handleChange('content')}
-          value={content}
+          onChange={this.handleChange('caption')}
+          value={caption}
+          type='text'
+          className='form-control'
+        />
+      </div>
+      <div className='form-group'>
+          <label className='text-muted'>Limite de temps</label>
+          <input
+            onChange={this.handleChange('timeLimit')}
+            value={timeLimit}
+            type='text'
+            className='form-control'
+          />
+      </div>
+      <div className='form-group'>
+        <label className='text-muted'>Limite de vues</label>
+        <input
+          onChange={this.handleChange('viewsLimit')}
+          value={viewsLimit}
           type='text'
           className='form-control'
         />
@@ -98,9 +118,11 @@ class NewPost extends Component {
   render() {
     const {
       title,
-      content,
+      caption,
       redirectToProfile,
       user,
+      viewsLimit,
+      timeLimit,
       error,
       loading
     } = this.state;
@@ -129,7 +151,7 @@ class NewPost extends Component {
                     alt={name}
                 /> */}
 
-        {this.newPostForm(title, content)}
+        {this.newPostForm(title, caption, viewsLimit, timeLimit)}
       </div>
     );
   }

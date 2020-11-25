@@ -1,5 +1,5 @@
 export const getUser = (userId, token) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
+  return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}/profile`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -12,7 +12,7 @@ export const getUser = (userId, token) => {
 };
 
 export const getAllUser = () => {
-  return fetch(`${process.env.REACT_APP_API_URL}/user`)
+  return fetch(`${process.env.REACT_APP_API_URL}/user/all`)
     .then(res => res.json())
     .catch(err => console.log(err));
 };

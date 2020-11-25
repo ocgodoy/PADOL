@@ -35,7 +35,7 @@ exports.signup = (req, res, next) => {
           Users.insertOne(newUser)
           .then(() => res.status(201).json({ message: 'User created' }))
           .catch(error => res.status(400).json({ error }));
-        });   
+        });
       } else {
         return res.status(401).json({ error: 'User already exists !' });
       }
@@ -75,9 +75,9 @@ exports.logout = (res, req, next) =>{
 
 /**************************** ACCOUNT INFO ****************************/
 exports.getUser = (req, res, next) => {
-    let user = req.profile;
-    delete user.auth.password;
-    res.status(200).json(user);
+
+    console.log("Get User appellé \n")
+    return res.status(200).json(req.profile);
 };
 
 exports.updateUser = (req,res,next) => {
@@ -104,6 +104,25 @@ exports.deleteUser = (req, res,next) =>{
     .catch(error => res.status(400).json({ error }));
 };
 
+exports.allUsers = (req, res) => {
+  console.log("Get All Users demandé \n")
+  const result = []
+  const user=Users.find().toArray().then(user => res.json(user))
+  //Users.find().toArray().then(user => {console.log(user),user.forEach((item, i) => {
+  //  result.push("jajajo")
+  //}) }).then(console.log("result vaut " + result))
+
+  //Users.find().select('_id').exec(user => console.log(user))
+  //Users.find((err, users) => {
+  //  console.log("err vaut " + err)
+  //  console.log("user vaut " + users)
+  //  if (err)
+  //    return res.status(400).json({
+  //      err
+  //    });
+  //  res.json(users);
+  //}).select('_id user.pseudo auth.email');
+};
 /**************************** FRIENDS ****************************/
 
 exports.addFriend = (req,res,next) => {

@@ -8,6 +8,7 @@ router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
 router.get('/:userId/profile', auth, userCtrl.getUser);
 router.put('/:userId', auth, userCtrl.updateUser);
+router.get('/all', userCtrl.allUsers);
 router.delete('/:userId', auth, userCtrl.deleteUser);
 router.post('/:userId/addFriend', auth, userCtrl.addFriend);
 router.delete('/:userId/removeFriend', auth, userCtrl.deleteFriend);

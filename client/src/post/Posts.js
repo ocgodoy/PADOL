@@ -27,6 +27,8 @@ class Posts extends Component {
             : DefaultAvatar;
           const posterId = post.postedBy ? post.postedBy._id : '';
           const posterName = post.postedBy ? post.postedBy.name : 'Unknown';
+          const infos = post.post;
+
           return (
             <div className='card col-md-3 mr-5 mb-5' key={post._id}>
               <img
@@ -37,8 +39,8 @@ class Posts extends Component {
                 alt='Card image cap'
               />
               <div className='card-body'>
-                <h5 className='card-title'>{post.title}</h5>
-                <p className='card-text'>{post.content.substring(0, 50)}</p>
+                <h5 className='card-title'>{infos.title}</h5>
+                <p className='card-text'>{infos.caption.substring(0, 50)}</p>
                 <br />
                 <p className='font-italic mark'>
                   Posted By <Link to={`/user/${posterId}`}>{posterName} </Link>
