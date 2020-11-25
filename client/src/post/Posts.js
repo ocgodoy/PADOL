@@ -25,6 +25,7 @@ class Posts extends Component {
           let photoUrl = post
             ? `${process.env.REACT_APP_API_URL}/post/photo/${post._id}`
             : DefaultAvatar;
+          console.log("post id " + post._id)
           const posterId = post.postedBy ? post.postedBy._id : '';
           const posterName = post.postedBy ? post.postedBy.name : 'Unknown';
           const infos = post.post;

@@ -8,9 +8,10 @@ const postSchema = new mongoose.Schema({
   post: {
     title: {type: String},
     caption: {type: String},
-    url: {type: String, require: true}
+    url: {type: Buffer, require: true},
+    contentType: String
   },
-  
+
   views: {
     viewsNumber: {type: Number, default: 0},
     viewsLimit: {type: Number},
@@ -31,7 +32,7 @@ const postSchema = new mongoose.Schema({
     uploadDate: {type: Date, default: Date.now},
     expiryDate: {type: Date}
   },
-  
+
   likes: {
     numberOfLikes: {type: Number, default: 0},
     likers: [{ type: ObjectId, ref: 'User' }]

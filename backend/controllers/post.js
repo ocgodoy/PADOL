@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 const Post = require('../models/Post');
 const formidable = require('formidable');
+const fs = require('fs');
+var ObjectId = require('mongodb').ObjectID;
 //const {getAllFriends} = require('./user');
 
 var db = mongoose.connection;
 var Posts = db.collection('Posts');
 
-exports.loadPostById = (req, res, next) => {
+exports.loadPostById = (req, res, next,id) => {
   Posts.findOne( {_id: ObjectId(id)} )
   .then( post => {
       if(!post){
@@ -29,26 +31,28 @@ exports.createPost = (req, res, next) => {
     let form = new formidable.IncomingForm();
   form.keepExtensions = true;
   form.parse(req, (err, fields, files) => {
-    var post_test= {post:{}, view:{}};
+    var post_test= {post:{}, views:{}};
     post_test.post.title = fields.title
     post_test.post.caption  = fields.caption
-    post_test.post.url = fields.photo
+
     //post_test.postedBy = ObjectId("5fbdcc5d42682316503994eb")
-    post_test.view.viewsLimit = fields.viewsLimit
+    post_test.views.viewsLimit = fields.viewsLimit
     console.log(JSON.stringify(post_test))
+
     if (err) {
       return res.status(400).json({
         err: 'Image could not be uploaded'
       });
     }
-    let post = new Post({...post_test});
     //req.profile.hashed_password = undefined;
     //req.profile.salt = undefined;
     //post.postedBy = req.profile;
     if (files.photo) {
-      //post.photo.data = fs.readFileSync(files.photo.path);
-      //post.photo.contentType = files.photo.type;
+      //console.log(files.photo)
+      post_test.post.url = fs.readFileSync(files.photo.path);
+      post_test.post.contentType = files.photo.type;
     }
+    let post = new Post({...post_test});
     Posts.insertOne(post)
     .then( () => {
       res.status(201).json({ message: 'Post saved successfully!' });
@@ -70,6 +74,15 @@ exports.createPost = (req, res, next) => {
     //  res.status(201).json({ message: 'Post saved successfully!' });
     //})
     //.catch(error => {res.status(400).json({ error: error });});
+};
+
+exports.getPhotoPost = (req, res) => {
+  console.log("Get photo Post appelé")
+  if (req.post.post.url) {
+    console.log("Photo trouvée")
+    //res.set(('Content-Type', req.post.post.contentType));
+    //return res.send(undefined);
+  } else res.send(undefined);
 };
 
 exports.getOnePost = (req, res, next) => {
