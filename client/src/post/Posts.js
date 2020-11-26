@@ -30,9 +30,9 @@ class Posts extends Component {
           console.log("Photo du post " + test)
           console.log("post id " + post._id)
           const posterId = post.postedBy ? post.postedBy._id : '';
-          const posterName = post.postedBy ? post.postedBy.name : 'Unknown';
+          const posterName = post.postedBy ? post.postedBy.pseudo : 'Unknown';
           const infos = post.post;
-
+          const date = post.date.uploadDate;
           return (
             <div className='card col-md-3 mr-5 mb-5' key={post._id}>
               <img
@@ -48,7 +48,7 @@ class Posts extends Component {
                 <br />
                 <p className='font-italic mark'>
                   Posted By <Link to={`/user/${posterId}`}>{posterName} </Link>
-                  on {new Date(post.created).toDateString()}
+                  on {new Date(date).toDateString()}
                 </p>
                 <Link
                   to={`/post/${post._id}`}

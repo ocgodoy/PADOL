@@ -1,6 +1,6 @@
 export const createPost = (userId, token, post) => {
 
-  return fetch(`${process.env.REACT_APP_API_URL}/post/`, {
+  return fetch(`${process.env.REACT_APP_API_URL}/post/${userId}`, {
     method: 'POST',
     headers: {
       Accept: 'application/json'
@@ -48,6 +48,7 @@ export const getAllPost = () => {
 export const getPost = (postId, token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/${postId}`, {
     method: 'GET',
+    'Content-Type': 'application/json',
     headers: {
       Accept: 'application/json',
       Authorization: `Bearer ${token}`

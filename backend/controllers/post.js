@@ -31,10 +31,11 @@ exports.createPost = (req, res, next) => {
     let form = new formidable.IncomingForm();
   form.keepExtensions = true;
   form.parse(req, (err, fields, files) => {
-    var post_test= {post:{}, views:{}};
+    var post_test= {post:{}, views:{}, postedBy:{}};
     post_test.post.title = fields.title
     post_test.post.caption  = fields.caption
-
+    post_test.postedBy._id = ObjectId(fields.userId)
+    post_test.postedBy.pseudo = req.profile.user.pseudo
     //post_test.postedBy = ObjectId("5fbdcc5d42682316503994eb")
     post_test.views.viewsLimit = fields.viewsLimit
     console.log(JSON.stringify(post_test))
@@ -87,11 +88,17 @@ exports.getPhotoPost = (req, res) => {
 
 exports.getOnePost = (req, res, next) => {
   console.log("Get One post appellé \n")
-  Posts.findOne({_id: req.params.id})
+  Posts.findOne({_id: req.body._id})
   .then( post => {
       res.status(200).json(post);
     })
     .catch( error => { res.status(404).json({ error: error }); } );
+};
+
+exports.getPost = (req, res) => {
+  console.log("Get post appellé \n")
+  console.log("Post demandé" + JSON.stringify(req.post.postedBy))
+  return res.json(req.post);
 };
 
 exports.getFeedPosts = (req, res, next) => {
@@ -152,6 +159,21 @@ exports.getAllPosts = (req, res, next) => {
       res.status(400).json({ error: error });
     }
   );
+};
+
+exports.comment = (req, res) => {
+  console.log("Comment demandé sur \n")
+  let comment = {};
+  comment.author = ObjectId(req.body.userId);
+  comment.comment = req.body.comment.text;
+  console.log(JSON.stringify(comment))
+  Posts.findOneAndUpdate(
+    {_id:ObjectId(req.body.postId)},
+    { $push: { comments: comment } },
+    { new: true }
+  )
+
+    ;
 };
 
 exports.updateViews = (req, res, next) => {

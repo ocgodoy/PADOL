@@ -74,16 +74,16 @@ class Comment extends Component {
               <div key={comment._id}>
                 <div className='row'>
                   <div>
-                    <Link to={`/user/${comment.postedBy._id}`}>
+                    <Link to={`/user/${comment.author._id}`}>
                       <img
                         style={{
                           borderRadius: '50%',
                           border: '2px solid black'
                         }}
                         className='mr-3'
-                        src={`${process.env.REACT_APP_API_URL}/user/photo/${comment.postedBy._id}`}
+                        src={`${process.env.REACT_APP_API_URL}/user/photo/${comment.author._id}`}
                         onError={i => (i.target.src = `${DefaultAvatar}`)}
-                        alt={comment.postedBy.name}
+                        alt={comment.author.name}
                         height='40px'
                         weight='40px'
                       />
@@ -97,14 +97,14 @@ class Comment extends Component {
                       style={{ paddingRight: '120%' }}
                     >
                       Posted By{' '}
-                      <Link to={`/user/${comment.postedBy._id}`}>
-                        {comment.postedBy.name}
+                      <Link to={`/user/${comment.author._id}`}>
+                        {comment.author.name}
                       </Link>
                       {'  '}on {new Date(comment.created).toDateString()}
                       {isAuthenticate().user &&
                       isAuthenticate().user._id == comment.postedBy._id ? (
                         <DeleteComment
-                          userId={comment.postedBy._id}
+                          userId={comment.author._id}
                           postId={this.props.postId}
                           commentId={comment._id}
                           updateComments={this.props.updateComments}

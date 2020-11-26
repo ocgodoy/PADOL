@@ -8,6 +8,9 @@ import Comment from './Comment';
 class SinglePost extends Component {
   state = {
     post: {},
+    postId:{},
+    postedBy: {},
+    date: null,
     redirectToSignin: false,
     like: false,
     likes: 0,
@@ -21,8 +24,11 @@ class SinglePost extends Component {
     getPost(postId, token).then(data => {
       if (data.err) console.log(data.err);
       this.setState({
-        post: data,
-        likes: data.likes.length,
+        post: data.post,
+        postedBy: data.postedBy,
+        postId: data._id,
+        date: data.date,
+        likes: data.likes.likers.length,
         like: this.checkLike(data.likes),
         comments: data.comments
       });
@@ -31,7 +37,8 @@ class SinglePost extends Component {
 
   checkLike = data => {
     const userId = isAuthenticate().user._id;
-    return data.indexOf(userId) > -1;
+    return {}
+    //return data.indexOf(userId) > -1;
   };
 
   likeToggle = () => {
@@ -52,6 +59,9 @@ class SinglePost extends Component {
   render() {
     const {
       post,
+      postedBy,
+      postId,
+      date,
       loading,
       likes,
       like,
@@ -61,8 +71,8 @@ class SinglePost extends Component {
     let photoUrl = post
       ? `${process.env.REACT_APP_API_URL}/post/photo/${post._id}`
       : DefaultAvatar;
-    const posterId = post.postedBy ? post.postedBy._id : '';
-    const posterName = post.postedBy ? post.postedBy.name : 'Unknown';
+    const posterId = postedBy ? postedBy._id : '';
+    const posterName = postedBy ? postedBy.pseudo : 'Unknown';
     if (redirectToSignin) return <Redirect to='/signin' />;
     return (
       <div className='container'>
@@ -100,7 +110,7 @@ class SinglePost extends Component {
             <br />
             <p className='font-italic mark'>
               Posted By <Link to={`/user/${posterId}`}>{posterName}</Link>
-              on {new Date(post.created).toDateString()}
+              on {new Date(date.uploadDate).toDateString()}
             </p>
             <Link to={`/`} className='btn btn-primary btn-raised btn-sm mr-5'>
               Back to posts
@@ -121,7 +131,7 @@ class SinglePost extends Component {
           </>
         )}
         <Comment
-          postId={post._id}
+          postId={postId}
           comments={comments}
           updateComments={this.updateComments}
           comments={comments}

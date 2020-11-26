@@ -3,7 +3,10 @@ const { ObjectId } = require('mongodb');
 
 const postSchema = new mongoose.Schema({
 
-  postedBy: {type: ObjectId, ref: 'User'},
+  postedBy: {
+    _id:{type: ObjectId,ref: 'User'},
+    pseudo: {type: String}
+  },
 
   post: {
     title: {type: String},
@@ -41,7 +44,7 @@ const postSchema = new mongoose.Schema({
   comments: [
     {
       comment: {type: String},
-      date: { type: Date, default: Date.now },
+      date: { type: Date, default: Date.now() },
       author: { type: ObjectId, ref: 'User' }
     }
   ]
