@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { getAllPost } from './apiPost';
 import DefaultAvatar from '../images/post.jpg';
 import { Link } from 'react-router-dom';
+import {getPhotoPost} from './apiPost'
 
 class Posts extends Component {
   constructor() {
@@ -25,6 +26,8 @@ class Posts extends Component {
           let photoUrl = post
             ? `${process.env.REACT_APP_API_URL}/post/photo/${post._id}`
             : DefaultAvatar;
+          const  test = `${process.env.REACT_APP_API_URL}/post/photo/${post._id}`
+          console.log("Photo du post " + test)
           console.log("post id " + post._id)
           const posterId = post.postedBy ? post.postedBy._id : '';
           const posterName = post.postedBy ? post.postedBy.name : 'Unknown';

@@ -1,16 +1,29 @@
 export const createPost = (userId, token, post) => {
-  const test = {}
-  test.jajajo = "mamama"
+
   return fetch(`${process.env.REACT_APP_API_URL}/post/`, {
     method: 'POST',
     headers: {
       Accept: 'application/json'
     },
-    body: JSON.stringify(test)
+    body: post
   })
     .then(res => res.json())
     //.catch(err => console.log(err));
 };
+
+export const getPhotoPost = (postId, token) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/post/photo/${postId}`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(res => res.json())
+    .catch(err => console.log(err));
+};
+
 
 export const editPost = (postId, token, post) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/${postId}`, {
