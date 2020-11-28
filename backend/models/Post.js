@@ -44,8 +44,9 @@ const postSchema = new mongoose.Schema({
   comments: [
     {
       comment: {type: String},
-      date: { type: Date, default: Date.now() },
-      author: { type: ObjectId, ref: 'User' }
+      date: { type: Date, default: Date.now },
+      author: { type: ObjectId, ref: 'User' },
+      pseudo: {type: String}
     }
   ]
 });

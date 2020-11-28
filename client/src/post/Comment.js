@@ -28,11 +28,12 @@ class Comment extends Component {
     e.preventDefault();
     if (this.isValid()) {
       const userId = isAuthenticate().user._id;
+      const pseudo = isAuthenticate().user.pseudo;
       const token = isAuthenticate().token;
       const postId = this.props.postId;
       const comment = { text: this.state.text };
 
-      newComment(postId, token, userId, comment).then(data => {
+      newComment(postId, token, userId, pseudo, comment).then(data => {
         if (data.err) console.log(data.err);
         this.setState({ text: '' });
         this.props.updateComments(data.comments);
@@ -74,21 +75,21 @@ class Comment extends Component {
               <div key={comment._id}>
                 <div className='row'>
                   <div>
-                    <Link to={`/user/${comment.author._id}`}>
+                    <Link to={`/user/${comment.author}`}>
                       <img
                         style={{
                           borderRadius: '50%',
                           border: '2px solid black'
                         }}
                         className='mr-3'
-                        src={`${process.env.REACT_APP_API_URL}/user/photo/${comment.author._id}`}
+                        src={`${process.env.REACT_APP_API_URL}/user/photo/${comment.author}`}
                         onError={i => (i.target.src = `${DefaultAvatar}`)}
-                        alt={comment.author.name}
+                        alt={comment.author}
                         height='40px'
                         weight='40px'
                       />
                       <h3 className='lead' style={{ display: 'inline' }}>
-                        {comment.text}
+                        {comment.comment}
                       </h3>
                     </Link>
                     <br />
@@ -97,14 +98,14 @@ class Comment extends Component {
                       style={{ paddingRight: '120%' }}
                     >
                       Posted By{' '}
-                      <Link to={`/user/${comment.author._id}`}>
-                        {comment.author.name}
+                      <Link to={`/user/${comment.author}`}>
+                        {comment.pseudo}
                       </Link>
-                      {'  '}on {new Date(comment.created).toDateString()}
+                      {'  '}on {new Date(comment.date).toDateString()}
                       {isAuthenticate().user &&
-                      isAuthenticate().user._id == comment.postedBy._id ? (
+                      isAuthenticate().user._id == comment.author ? (
                         <DeleteComment
-                          userId={comment.author._id}
+                          userId={comment.author}
                           postId={this.props.postId}
                           commentId={comment._id}
                           updateComments={this.props.updateComments}

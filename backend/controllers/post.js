@@ -97,7 +97,7 @@ exports.getOnePost = (req, res, next) => {
 
 exports.getPost = (req, res) => {
   console.log("Get post appellé \n")
-  console.log("Post demandé" + JSON.stringify(req.post.postedBy))
+  console.log("Post demandé" + JSON.stringify(req.post.comments))
   return res.json(req.post);
 };
 
@@ -166,12 +166,14 @@ exports.comment = (req, res) => {
   let comment = {};
   comment.author = ObjectId(req.body.userId);
   comment.comment = req.body.comment.text;
+  comment.date = new Date(Date.now());
+  comment.pseudo = req.body.pseudo
   console.log(JSON.stringify(comment))
   Posts.findOneAndUpdate(
     {_id:ObjectId(req.body.postId)},
     { $push: { comments: comment } },
     { new: true }
-  )
+  ).then(post => res.json(post, console.log("Commentaires: " + JSON.stringify(post.comments))))
 
     ;
 };
@@ -185,20 +187,15 @@ exports.updateViews = (req, res, next) => {
       return res.status(401).json({ error: 'no image !' });
     } else {
 
-      //Vérification que views existe
-      if (!image.views) {
-        image.views =  "0";
-      };
-
       //Dépassement de viewsLimit
-      if (image.views >= image.viewsLimit) {
-        Posts.deleteOne(image);
+      if (image.views.viewsNumber >= image.views.viewsLimit) {
+        Posts.deleteOne({_id:image._id});
         return res.status(401).json('image destroyed !');
       }
 
       //Incrémentation de views
       else {
-        image.views++;
+        image.views.viewsNumber++;
         Posts.findOneAndUpdate({ _id: ObjectId(imageId) }, { $set: image })
         .then(image => {
           if (!image) { return res.status(401).json('image not found !'); }

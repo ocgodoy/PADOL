@@ -111,7 +111,7 @@ export const unlikePost = (postId, token, userId) => {
     .catch(err => console.log(err));
 };
 
-export const newComment = (postId, token, userId, comment) => {
+export const newComment = (postId, token, userId, pseudo, comment) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/comment`, {
     method: 'PUT',
     headers: {
@@ -119,7 +119,7 @@ export const newComment = (postId, token, userId, comment) => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ userId, postId, comment })
+    body: JSON.stringify({ userId, postId, pseudo, comment })
   })
     .then(res => res.json())
     .catch(err => console.log(err));
