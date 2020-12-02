@@ -1,0 +1,22 @@
+{
+  "name": "padol",
+  "version": "1.0.0",
+  "description": "\"PADOL S9 project\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ocgodoy/PADOL.git"
+  },
+  "author": "Maxime Jouard, Océane Godoy, Axel Jollis, Matthieu Pigaglio, Kenny Abdou, Hicham Larchi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ocgodoy/PADOL/issues"
+  },
+  "homepage": "https://github.com/ocgodoy/PADOL#readme",
+  "devDependencies": {
+    "standardjs": "^1.0.0-alpha"
+  }
+}

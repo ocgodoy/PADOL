@@ -1,17 +1,17 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import Home from './core/Home';
-import Signup from './user/Signup';
-import Signin from './user/Signin';
-import Menu from './core/Menu';
-import Profile from './user/Profile';
-import Users from './user/Users';
-import EditProfile from './user/EditProfile';
-import PrivateRoute from './auth/PrivateRoute';
-import FindPeople from './user/FindPeople';
-import NewPost from './post/NewPost';
-import SinglePost from './post/SinglePost';
-import EditPost from './post/EditPost';
+import React from 'react'
+import { Route, Switch } from 'react-router-dom'
+import Home from './core/Home'
+import Signup from './user/Signup'
+import Signin from './user/Signin'
+import Menu from './core/Menu'
+import Profile from './user/Profile'
+import Users from './user/Users'
+import EditProfile from './user/EditProfile'
+import PrivateRoute from './auth/PrivateRoute'
+import FindPeople from './user/FindPeople'
+import NewPost from './post/NewPost'
+import SinglePost from './post/SinglePost'
+import EditPost from './post/EditPost'
 
 const MainRouter = () => (
   <div>
@@ -33,6 +33,6 @@ const MainRouter = () => (
       <PrivateRoute exact path='/post/edit/:postId' component={EditPost} />
     </Switch>
   </div>
-);
+)
 
-export default MainRouter;
+export default MainRouter

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { signout, isAuthenticate, isActive } from '../auth';
+import React from 'react'
+import { Link, withRouter } from 'react-router-dom'
+import { signout, isAuthenticate, isActive } from '../auth'
 
 const Menu = ({ history }) => (
   <div>
@@ -70,8 +70,8 @@ const Menu = ({ history }) => (
           <li className='nav-item'>
             <Link
               className='nav-link'
-              style={isActive(history, `/post/new`)}
-              to={`/post/new`}
+              style={isActive(history, '/post/new')}
+              to='/post/new'
             >
               Create Post
             </Link>
@@ -94,6 +94,6 @@ const Menu = ({ history }) => (
       )}
     </ul>
   </div>
-);
+)
 
-export default withRouter(Menu);
+export default withRouter(Menu)

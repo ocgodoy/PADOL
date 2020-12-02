@@ -1,41 +1,40 @@
-import React, { Component } from 'react';
-import { getAllPost } from './apiPost';
-import { isAuthenticate } from '../auth';
-import DefaultAvatar from '../images/post.jpg';
-import { Link } from 'react-router-dom';
-import {getPhotoPost} from './apiPost'
+import React, { Component } from 'react'
+import { getAllPost, getPhotoPost } from './apiPost'
+import { isAuthenticate } from '../auth'
+import DefaultAvatar from '../images/post.jpg'
+import { Link } from 'react-router-dom'
 
 class Posts extends Component {
-  constructor() {
-    super();
+  constructor () {
+    super()
     this.state = {
       posts: []
-    };
+    }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     getAllPost().then(data => {
-      if (data.err) console.log(data.err);
-      else this.setState({ posts: data });
-    });
+      if (data.err) console.log(data.err)
+      else this.setState({ posts: data })
+    })
   }
 
-  renderPost(posts) {
+  renderPost (posts) {
     return (
       <div className='row'>
         {posts.map(post => {
-          let photoUrl = post
+          const photoUrl = post
             ? `${process.env.REACT_APP_API_URL}/post/photo/${post._id}`
-            : DefaultAvatar;
-          const token = isAuthenticate().token;
-          const  test = JSON.stringify(getPhotoPost(post._id,token))
-          console.log("Photo du post " + test)
-          console.log("post id " + post._id)
-          const posterId = post.postedBy ? post.postedBy._id : '';
-          const posterName = post.postedBy ? post.postedBy.pseudo : 'Unknown';
-          const infos = post.post;
-          const date = post.date.uploadDate;
-          const expiryDate = post.date.expiryDate;
+            : DefaultAvatar
+          const token = isAuthenticate().token
+          const test = JSON.stringify(getPhotoPost(post._id, token))
+          console.log('Photo du post ' + test)
+          console.log('post id ' + post._id)
+          const posterId = post.postedBy ? post.postedBy._id : ''
+          const posterName = post.postedBy ? post.postedBy.pseudo : 'Unknown'
+          const infos = post.post
+          const date = post.date.uploadDate
+          const expiryDate = post.date.expiryDate
           const views = post.views
           return (
             <div className='card col-md-3 mr-5 mb-5' key={post._id}>
@@ -54,13 +53,13 @@ class Posts extends Component {
                 <p className='card-text'>{infos.caption.substring(0, 50)}</p>
                 <br />
                 <p className='font-italic mark'>
-                {new Date(date).toDateString()}
+                  {new Date(date).toDateString()}
                 </p>
                 <p className='font-italic mark'>
-                Expiration {new Date(expiryDate).toDateString()}
+                  Expiration {new Date(expiryDate).toDateString()}
                 </p>
                 <p className='font-italic mark'>
-                Vues: {views.viewsNumber}/{views.viewsLimit}
+                  Vues: {views.viewsNumber}/{views.viewsLimit}
                 </p>
                 <Link
                   to={`/post/${post._id}`}
@@ -70,14 +69,14 @@ class Posts extends Component {
                 </Link>
               </div>
             </div>
-          );
+          )
         })}
       </div>
-    );
+    )
   }
 
-  render() {
-    const { posts } = this.state;
+  render () {
+    const { posts } = this.state
     return (
       <div className='container'>
         {!posts.length || posts.length == 'undefined' ? (
@@ -90,8 +89,8 @@ class Posts extends Component {
 
         {this.renderPost(posts)}
       </div>
-    );
+    )
   }
 }
 
-export default Posts;
+export default Posts

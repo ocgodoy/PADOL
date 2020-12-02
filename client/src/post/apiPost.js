@@ -1,5 +1,4 @@
 export const createPost = (userId, token, post) => {
-
   return fetch(`${process.env.REACT_APP_API_URL}/post/${userId}`, {
     method: 'POST',
     headers: {
@@ -8,8 +7,8 @@ export const createPost = (userId, token, post) => {
     body: post
   })
     .then(res => res.json())
-    //.catch(err => console.log(err));
-};
+    // .catch(err => console.log(err));
+}
 
 export const getPhotoPost = (postId, token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/photo/${postId}`, {
@@ -20,9 +19,8 @@ export const getPhotoPost = (postId, token) => {
     }
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
-
+    .catch(err => console.log(err))
+}
 
 export const editPost = (postId, token, post) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/${postId}`, {
@@ -34,15 +32,15 @@ export const editPost = (postId, token, post) => {
     body: post
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const getAllPost = () => {
-  const test = {test:"jojo", opt: "jaja"}
+  const test = { test: 'jojo', opt: 'jaja' }
   return fetch(`${process.env.REACT_APP_API_URL}/post/all`)
     .then(res => res.json())
-    //.catch(err => console.log(err));
-};
+    // .catch(err => console.log(err));
+}
 
 export const getPost = (postId, token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/${postId}`, {
@@ -55,8 +53,8 @@ export const getPost = (postId, token) => {
     }
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const getPostByUser = (userId, token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/by/${userId}`, {
@@ -67,8 +65,8 @@ export const getPostByUser = (userId, token) => {
     }
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const removePost = (postId, token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/${postId}`, {
@@ -80,8 +78,8 @@ export const removePost = (postId, token) => {
     }
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const likePost = (postId, token, userId) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/like`, {
@@ -94,8 +92,8 @@ export const likePost = (postId, token, userId) => {
     body: JSON.stringify({ userId, postId })
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const unlikePost = (postId, token, userId) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/unlike`, {
@@ -108,8 +106,8 @@ export const unlikePost = (postId, token, userId) => {
     body: JSON.stringify({ userId, postId })
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const newComment = (postId, token, userId, pseudo, comment) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/comment`, {
@@ -122,8 +120,8 @@ export const newComment = (postId, token, userId, pseudo, comment) => {
     body: JSON.stringify({ userId, postId, pseudo, comment })
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const deleteComment = (postId, token, userId, comment) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/deletecomment`, {
@@ -136,5 +134,5 @@ export const deleteComment = (postId, token, userId, comment) => {
     body: JSON.stringify({ userId, postId, comment })
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}

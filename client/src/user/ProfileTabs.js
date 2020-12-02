@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import DefaultAvatar from '../images/avatar.png';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import DefaultAvatar from '../images/avatar.png'
 
 class ProfileTabs extends Component {
-  render() {
-    const { followers, following, posts } = this.props;
+  render () {
+    const { followers, following, posts } = this.props
     return (
       <div>
         <div className='row'>
@@ -84,8 +84,8 @@ class ProfileTabs extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default ProfileTabs;
+export default ProfileTabs

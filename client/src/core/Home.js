@@ -1,5 +1,5 @@
-import React from 'react';
-import Posts from '../post/Posts';
+import React from 'react'
+import Posts from '../post/Posts'
 
 const Home = () => (
   <div>
@@ -11,6 +11,6 @@ const Home = () => (
       <Posts />
     </div>
   </div>
-);
+)
 
-export default Home;
+export default Home

@@ -8,20 +8,20 @@ export const getUser = (userId, token) => {
     }
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const getAllUser = () => {
   return fetch(`${process.env.REACT_APP_API_URL}/user/all`)
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const findPeople = userId => {
   return fetch(`${process.env.REACT_APP_API_URL}/user/findpeople/${userId}`)
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const removeUser = (userId, token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
@@ -33,8 +33,8 @@ export const removeUser = (userId, token) => {
     }
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const update = (userId, token, user) => {
   return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
@@ -46,19 +46,19 @@ export const update = (userId, token, user) => {
     body: user
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const updateLocalStorage = (user, next) => {
   if (typeof window !== 'undefined') {
     if (localStorage.getItem('jwt')) {
-      let auth = JSON.parse(localStorage.getItem('jwt'));
-      auth.user = user;
-      localStorage.setItem('jwt', JSON.stringify(auth));
-      next();
+      const auth = JSON.parse(localStorage.getItem('jwt'))
+      auth.user = user
+      localStorage.setItem('jwt', JSON.stringify(auth))
+      next()
     }
   }
-};
+}
 
 export const follow = (userId, token, followId) => {
   return fetch(`${process.env.REACT_APP_API_URL}/user/follow`, {
@@ -71,8 +71,8 @@ export const follow = (userId, token, followId) => {
     body: JSON.stringify({ userId, followId })
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
 
 export const unfollow = (userId, token, unfollowId) => {
   return fetch(`${process.env.REACT_APP_API_URL}/user/unfollow`, {
@@ -85,5 +85,5 @@ export const unfollow = (userId, token, unfollowId) => {
     body: JSON.stringify({ userId, unfollowId })
   })
     .then(res => res.json())
-    .catch(err => console.log(err));
-};
+    .catch(err => console.log(err))
+}
