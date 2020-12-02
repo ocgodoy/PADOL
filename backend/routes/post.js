@@ -10,8 +10,8 @@ router.post('/:userId', postCtrl.createPost)
 router.get('/all', postCtrl.getAllPosts)
 router.get('/', postCtrl.getFeedPosts)
 router.get('/:postId', postCtrl.getPost)
-router.get('/photo/:postId', postCtrl.getPhotoPost)
-router.put('/comment', postCtrl.comment)
+router.get('/photo/:postId', postCtrl.getPhotoFromPost)
+router.put('/comment', postCtrl.commentPost)
 // router.put('/:userId/:imageId', auth, postCtrl.editPost);
 // router.delete('/:userId/:imageId', auth, postCtrl.deletePost);
 
