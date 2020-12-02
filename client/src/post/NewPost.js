@@ -31,7 +31,6 @@ class NewPost extends Component {
     let fileSize = name === 'photo' ? e.target.files[0].size : 0;
     this.postData.set(name, value);
     this.setState({ [name]: value, error: '', fileSize });
-    console.log("New post value data" + this.postData.get('photo') )
   };
 
   clickSubmit = e => {
@@ -74,7 +73,6 @@ class NewPost extends Component {
           className='form-control'
         />
       </div>
-
       <div className='form-group'>
         <label className='text-muted'>Title</label>
         <input
@@ -94,23 +92,34 @@ class NewPost extends Component {
         />
       </div>
       <div className='form-group'>
-          <label className='text-muted'>Limite de temps</label>
-          <input
-            onChange={this.handleChange('timeLimit')}
-            value={timeLimit}
-            type='text'
-            className='form-control'
-          />
+          <label className='text-muted'>
+            Limite de temps :
+          </label>
+          <div>
+            <select value={timeLimit} onChange={this.handleChange('timeLimit')}>
+              <option value="432000000">Aucune</option>
+              <option value="60000">1 minute</option>
+              <option value="900000">15 minutes</option>
+              <option value="36000000">1 heure</option>
+              <option value="18000000">5 heures</option>
+            </select>
+            </div>
       </div>
       <div className='form-group'>
-        <label className='text-muted'>Limite de vues</label>
-        <input
-          onChange={this.handleChange('viewsLimit')}
-          value={viewsLimit}
-          type='text'
-          className='form-control'
-        />
+          <label className='text-muted'>
+            Limite de vues :
+          </label>
+          <div>
+            <select value={viewsLimit} onChange={this.handleChange('viewsLimit')}>
+              <option value="1000">Aucune</option>
+              <option value="5">5 vues</option>
+              <option value="15">15 vues</option>
+              <option value="50">50 vues</option>
+              <option value="200">200 vues</option>
+            </select>
+            </div>
       </div>
+
       <button onClick={this.clickSubmit} className='btn btn-raised btn-primary'>
         Create
       </button>

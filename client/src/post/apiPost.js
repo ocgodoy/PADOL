@@ -16,7 +16,6 @@ export const getPhotoPost = (postId, token) => {
     method: 'GET',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     }
   })
@@ -51,6 +50,7 @@ export const getPost = (postId, token) => {
     'Content-Type': 'application/json',
     headers: {
       Accept: 'application/json',
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     }
   })

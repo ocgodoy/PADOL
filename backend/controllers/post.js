@@ -15,10 +15,9 @@ exports.loadPostById = (req, res, next,id) => {
         return res.status(400).json({error: 'Post not found'})
       }
       req.post = post;
-      res.status(200).json(post);
       next();
     }
-  ).catch(error => { res.status(400).json({ error: error });});
+  )
 };
 
 
@@ -31,25 +30,22 @@ exports.createPost = (req, res, next) => {
     let form = new formidable.IncomingForm();
   form.keepExtensions = true;
   form.parse(req, (err, fields, files) => {
-    var post_test= {post:{}, views:{}, postedBy:{}};
+    var post_test= {post:{}, views:{}, postedBy:{}, date:{}};
     post_test.post.title = fields.title
     post_test.post.caption  = fields.caption
     post_test.postedBy._id = ObjectId(fields.userId)
     post_test.postedBy.pseudo = req.profile.user.pseudo
     //post_test.postedBy = ObjectId("5fbdcc5d42682316503994eb")
     post_test.views.viewsLimit = fields.viewsLimit
+    post_test.date.expiryDate = new Date((new Date(Date.now())).getTime()+parseInt(fields.timeLimit))
     console.log(JSON.stringify(post_test))
-
     if (err) {
       return res.status(400).json({
         err: 'Image could not be uploaded'
       });
     }
-    //req.profile.hashed_password = undefined;
-    //req.profile.salt = undefined;
-    //post.postedBy = req.profile;
+
     if (files.photo) {
-      //console.log(files.photo)
       post_test.post.url = fs.readFileSync(files.photo.path);
       post_test.post.contentType = files.photo.type;
     }
@@ -60,45 +56,29 @@ exports.createPost = (req, res, next) => {
     })
     .catch(error => {res.status(400).json({ error: error });});
   });
-    //var post_test= {post:{}, view:{}};
-    //post_test.post.title = "Voyage Marseille"
-    //post_test.post.caption  = "Avec les potes"
-    //post_test.post.url = "http://test"
-    //post_test.postedBy = ObjectId("5fbdcc5d42682316503994eb")
-    //post_test.view.viewsLimit = 4
-    //const post = new Post({
-      //...req.body
-    //  ...post_test
-    //});
-    //Posts.insertOne(post)
-    //.then( () => {
-    //  res.status(201).json({ message: 'Post saved successfully!' });
-    //})
-    //.catch(error => {res.status(400).json({ error: error });});
+
 };
 
 exports.getPhotoPost = (req, res) => {
   console.log("Get photo Post appelé")
   if (req.post.post.url) {
     console.log("Photo trouvée")
-    //res.set(('Content-Type', req.post.post.contentType));
-    //return res.send(undefined);
+    res.set(('Content-Type', req.post.post.contentType));
+    return res.send(req.post.post.url);
   } else res.send(undefined);
 };
 
-exports.getOnePost = (req, res, next) => {
-  console.log("Get One post appellé \n")
-  Posts.findOne({_id: req.body._id})
-  .then( post => {
-      res.status(200).json(post);
-    })
-    .catch( error => { res.status(404).json({ error: error }); } );
-};
+
 
 exports.getPost = (req, res) => {
   console.log("Get post appellé \n")
-  console.log("Post demandé" + JSON.stringify(req.post.comments))
-  return res.json(req.post);
+  delete req.post.post.url
+  Posts.findOneAndUpdate({_id: req.post._id},{$inc: {'views.viewsNumber': 1}})
+  .then(post=> {if (req.post.views.viewsNumber<req.post.views.viewsLimit) {res.status(200).json(req.post)}
+  else {res.status(400).json({error: "Post plus disponible"})}
+  })
+  //console.log("Post demandé" + JSON.stringify(req.post))
+  //return res.status(200).json(req.post).catch( error => res.status(400).json({error: error}));
 };
 
 exports.getFeedPosts = (req, res, next) => {

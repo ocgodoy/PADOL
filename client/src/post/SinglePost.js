@@ -22,16 +22,20 @@ class SinglePost extends Component {
     const token = isAuthenticate().token;
     const postId = this.props.match.params.postId;
     getPost(postId, token).then(data => {
-      if (data.err) console.log(data.err);
-      this.setState({
-        post: data.post,
-        postedBy: data.postedBy,
-        postId: data._id,
-        date: data.date,
-        likes: data.likes.likers.length,
-        like: this.checkLike(data.likes),
-        comments: data.comments
-      });
+      if (data.error) console.log(data.error);
+      else{
+          console.log(data)
+          this.setState({
+            post: data.post,
+            postedBy: data.postedBy,
+            postId: data._id,
+            date: data.date,
+            views: data.views,
+            likes: data.likes.likers.length,
+            like: this.checkLike(data.likes),
+            comments: data.comments
+          });
+        }
     });
   }
 
@@ -65,11 +69,12 @@ class SinglePost extends Component {
       loading,
       likes,
       like,
+      views,
       redirectToSignin,
       comments
     } = this.state;
     let photoUrl = post
-      ? `${process.env.REACT_APP_API_URL}/post/photo/${post._id}`
+      ? `${process.env.REACT_APP_API_URL}/post/photo/${postId}`
       : DefaultAvatar;
     const posterId = postedBy ? postedBy._id : '';
     const posterName = postedBy ? postedBy.pseudo : 'Unknown';
@@ -110,7 +115,9 @@ class SinglePost extends Component {
             <br />
             <p className='font-italic mark'>
               Posted By <Link to={`/user/${posterId}`}>{posterName}</Link>
-              on {new Date(date.uploadDate).toDateString()}
+              on {new Date(date.uploadDate).toDateString()} at {(new Date(date.uploadDate)).getHours()}:{(new Date(date.uploadDate)).getMinutes()}
+            </p>
+            <p> Vues: {views.viewsNumber}/{views.viewsLimit}
             </p>
             <Link to={`/`} className='btn btn-primary btn-raised btn-sm mr-5'>
               Back to posts

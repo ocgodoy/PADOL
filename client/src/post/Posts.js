@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { getAllPost } from './apiPost';
+import { isAuthenticate } from '../auth';
 import DefaultAvatar from '../images/post.jpg';
 import { Link } from 'react-router-dom';
 import {getPhotoPost} from './apiPost'
@@ -26,15 +27,21 @@ class Posts extends Component {
           let photoUrl = post
             ? `${process.env.REACT_APP_API_URL}/post/photo/${post._id}`
             : DefaultAvatar;
-          const  test = `${process.env.REACT_APP_API_URL}/post/photo/${post._id}`
+          const token = isAuthenticate().token;
+          const  test = JSON.stringify(getPhotoPost(post._id,token))
           console.log("Photo du post " + test)
           console.log("post id " + post._id)
           const posterId = post.postedBy ? post.postedBy._id : '';
           const posterName = post.postedBy ? post.postedBy.pseudo : 'Unknown';
           const infos = post.post;
           const date = post.date.uploadDate;
+          const expiryDate = post.date.expiryDate;
+          const views = post.views
           return (
             <div className='card col-md-3 mr-5 mb-5' key={post._id}>
+              <div>
+                <Link to={`/user/${posterId}`}>{posterName} </Link>
+              </div>
               <img
                 className='card-img-top'
                 src={photoUrl}
@@ -47,8 +54,13 @@ class Posts extends Component {
                 <p className='card-text'>{infos.caption.substring(0, 50)}</p>
                 <br />
                 <p className='font-italic mark'>
-                  Posted By <Link to={`/user/${posterId}`}>{posterName} </Link>
-                  on {new Date(date).toDateString()}
+                {new Date(date).toDateString()}
+                </p>
+                <p className='font-italic mark'>
+                Expiration {new Date(expiryDate).toDateString()}
+                </p>
+                <p className='font-italic mark'>
+                Vues: {views.viewsNumber}/{views.viewsLimit}
                 </p>
                 <Link
                   to={`/post/${post._id}`}

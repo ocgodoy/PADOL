@@ -88,20 +88,21 @@ class Comment extends Component {
                         height='40px'
                         weight='40px'
                       />
+
                       <h3 className='lead' style={{ display: 'inline' }}>
-                        {comment.comment}
+                      <Link to={`/user/${comment.author}`}>
+                        {comment.pseudo}
+                      </Link>:
                       </h3>
                     </Link>
+                    <h3> {comment.comment} </h3>
                     <br />
                     <span
                       className='font-italic mark'
                       style={{ paddingRight: '120%' }}
                     >
-                      Posted By{' '}
-                      <Link to={`/user/${comment.author}`}>
-                        {comment.pseudo}
-                      </Link>
-                      {'  '}on {new Date(comment.date).toDateString()}
+
+                      {(new Date(comment.date)).getHours()}:{(new Date(comment.date)).getMinutes()} on {new Date(comment.date).toDateString()}
                       {isAuthenticate().user &&
                       isAuthenticate().user._id == comment.author ? (
                         <DeleteComment
