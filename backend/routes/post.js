@@ -8,7 +8,6 @@ const { loadUserById } = require('../controllers/user')
 router.post('/:userId', postCtrl.createPost)
 // router.get('/:userId/:imageId', auth, postCtrl.getOnePost);
 router.get('/all', postCtrl.getAllPosts)
-router.get('/', postCtrl.getFeedPosts)
 router.get('/:postId', postCtrl.getPost)
 router.get('/photo/:postId', postCtrl.getPhotoFromPost)
 router.put('/comment', postCtrl.commentPost)

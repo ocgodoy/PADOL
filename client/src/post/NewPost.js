@@ -83,7 +83,7 @@ class NewPost extends Component {
         />
       </div>
       <div className='form-group'>
-        <label className='text-muted'>caption</label>
+        <label className='text-muted'>Caption</label>
         <input
           onChange={this.handleChange('caption')}
           value={caption}

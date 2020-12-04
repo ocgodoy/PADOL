@@ -37,7 +37,7 @@ class Profile extends Component {
         } else {
           console.log(data);
 
-          this.setState({ user: data.user });
+          this.setState({ user: data.about });
           this.setState({ auth: data.auth });
           this.setState({ location: data.location });
           //this.loadPosts(data._id);

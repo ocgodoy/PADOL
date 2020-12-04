@@ -51,12 +51,11 @@ exports.login = (req, res, next) => {
       }
       bcrypt.compare(req.body.password, user.auth.password)
         .then(valid => {
-        // console.log("test reussi \n")
           if (!valid) {
             return res.status(401).json({ error: 'Incorrect password' })
           }
           res.status(200).json({
-            user: { _id: user._id, email: user.auth.email, pseudo: user.user.pseudo },
+            user: { _id: user._id, email: user.auth.email, pseudo: user.about.pseudo },
             token: jwt.sign(
               { _id: user._id },
               'RANDOM_TOKEN_SECRET',

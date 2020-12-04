@@ -44,7 +44,7 @@ exports.createPost = (req, res, next) => {
     }
 
     if (files.photo) {
-      posTest.content.url = fs.readFileSync(files.photo.path)
+      postTest.content.url = fs.readFileSync(files.photo.path)
       postTest.content.contentType = files.photo.type
     }
     const post = new Post({ ...posTest })
@@ -75,7 +75,6 @@ exports.getPost = (req, res) => {
   // console.log("Post demandé" + JSON.stringify(req.post))
   // return res.status(200).json(req.post).catch( error => res.status(400).json({error: error}));
 }
-
 
 exports.editPost = (req, res, next) => {
   const post = new Post({

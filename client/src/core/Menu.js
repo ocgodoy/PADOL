@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
-import { signout, isAuthenticate, isActive } from '../auth'
+import { signout, isAuthenticate, isActive } from '../auth/index'
 
 const Menu = ({ history }) => (
   <div>

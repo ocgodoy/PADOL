@@ -30,8 +30,8 @@ export const authenticate = (jwt, next) => {
 }
 
 export const isAuthenticate = () => {
-  // localStorage.clear();
-  const jwt = localStorage.jwt
+  //localStorage.clear();
+  let jwt = localStorage.jwt
   if (jwt) return JSON.parse(jwt)
   return false
 }

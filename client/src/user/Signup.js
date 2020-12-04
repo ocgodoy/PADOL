@@ -26,7 +26,7 @@ class Signup extends Component {
     const { firstName, lastName, email, password, pseudo } = this.state;
     const user = { firstName, lastName, pseudo };
     const auth = {email, password};
-    const newUser = {user:user,auth:auth};
+    const newUser = {about:user,auth:auth};
     signup(newUser).then(res => {
       if (res.error) this.setState({ error: res.error });
       else {

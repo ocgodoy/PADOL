@@ -26,7 +26,7 @@ class SinglePost extends Component {
       else{
           console.log(data)
           this.setState({
-            post: data.post,
+            post: data.content,
             postedBy: data.postedBy,
             postId: data._id,
             date: data.date,
