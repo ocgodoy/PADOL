@@ -121,7 +121,7 @@ class Profile extends Component {
         <div className='row'>
           <div className='col md-12 mt-5 mb-5'>
             <hr />
-            <p className='lead'>user.about</p>
+            <p className='lead'>About</p>
 
             <hr />
             <ProfileTabs

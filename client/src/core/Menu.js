@@ -52,7 +52,7 @@ const Menu = ({ history }) => (
               style={isActive(history, `/user/${isAuthenticate().user._id}`)}
               to={`/user/${isAuthenticate().user._id}`}
             >
-              {isAuthenticate().user.name}'s profile
+              {isAuthenticate().user.pseudo}'s profile
             </Link>
           </li>
           <li className='nav-item'>

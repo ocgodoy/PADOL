@@ -32,7 +32,7 @@ exports.createPost = (req, res, next) => {
     postTest.content.title = fields.title
     postTest.content.caption = fields.caption
     postTest.postedBy._id = ObjectId(fields.userId)
-    postTest.postedBy.pseudo = req.profile.user.pseudo
+    postTest.postedBy.pseudo = req.profile.about.pseudo
     // post_test.postedBy = ObjectId("5fbdcc5d42682316503994eb")
     postTest.views.viewsLimit = fields.viewsLimit
     postTest.date.expiryDate = new Date((new Date(Date.now())).getTime() + parseInt(fields.timeLimit))
@@ -47,7 +47,7 @@ exports.createPost = (req, res, next) => {
       postTest.content.url = fs.readFileSync(files.photo.path)
       postTest.content.contentType = files.photo.type
     }
-    const post = new Post({ ...posTest })
+    const post = new Post({ ...postTest })
     Posts.insertOne(post)
       .then(() => {
         res.status(201).json({ message: 'Post saved successfully!' })
@@ -79,9 +79,9 @@ exports.getPost = (req, res) => {
 exports.editPost = (req, res, next) => {
   const post = new Post({
     _id: req.params.id,
-    caption: req.body.caption,
-    url: req.body.url,
-    userId: req.body.userId
+    caption: req.body.content.caption,
+    url: req.body.content.url,
+    userId: req.body.postedBy.userId
   })
   Posts.updateOne({ _id: req.params.id }, image).then(
     () => {

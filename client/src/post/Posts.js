@@ -32,7 +32,7 @@ class Posts extends Component {
           console.log('post id ' + post._id)
           const posterId = post.postedBy ? post.postedBy._id : ''
           const posterName = post.postedBy ? post.postedBy.pseudo : 'Unknown'
-          const infos = post.post
+          const infos = post.content
           const date = post.date.uploadDate
           const expiryDate = post.date.expiryDate
           const views = post.views
