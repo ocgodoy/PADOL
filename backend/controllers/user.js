@@ -51,11 +51,12 @@ exports.login = (req, res, next) => {
       }
       bcrypt.compare(req.body.password, user.auth.password)
         .then(valid => {
+          console.log("test reussi \n")
           if (!valid) {
             return res.status(401).json({ error: 'Incorrect password' })
           }
           res.status(200).json({
-            user: { _id: user._id, email: user.auth.email, pseudo: user.about.pseudo },
+            user: { _id: user._id, email: user.auth.email, pseudo: user.user.pseudo },
             token: jwt.sign(
               { _id: user._id },
               'RANDOM_TOKEN_SECRET',
@@ -106,7 +107,7 @@ exports.deleteUser = (req, res, next) => {
 exports.allUsers = (req, res) => {
   console.log('Get All Users demandé \n')
   const result = []
-  const user = Users.find().toArray().then(user => res.json(user))
+  let user = Users.find().toArray().then(user => res.json(user))
   // Users.find().toArray().then(user => {console.log(user),user.forEach((item, i) => {
   //  result.push("jajajo")
   // }) }).then(console.log("result vaut " + result))
