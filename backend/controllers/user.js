@@ -55,22 +55,29 @@ exports.login = (req, res, next) => {
           if (!valid) {
             return res.status(401).json({ error: 'Incorrect password' })
           }
+          const token = jwt.sign(
+            { _id: user._id },
+            'RANDOM_TOKEN_SECRET',
+            { expiresIn: '24h' },
+          );
+          res.cookie('t', token, {
+            expire: new Date() + 9999
+          });
           res.status(200).json({
             user: { _id: user._id, email: user.auth.email, pseudo: user.about.pseudo },
-            token: jwt.sign(
-              { _id: user._id },
-              'RANDOM_TOKEN_SECRET',
-              { expiresIn: '24h' }
-            )
+            token: token
           })
         })
-        .catch(error => res.status(500).json({ error: 'Problem' }))
+        .catch(error => res.status(500).json({ error: 'Password ckeck failed' }))
     })
     .catch(error => res.status(500).json({ error: 'Problem' }))
 }
 
 exports.logout = (res, req, next) => {
-
+  res.clearCookie('t');
+  return res.json({
+    message: 'Signout success!'
+  });
 }
 
 /** ************************** ACCOUNT INFO ****************************/
