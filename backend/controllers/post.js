@@ -69,31 +69,43 @@ exports.getPost = (req, res) => {
   console.log('Get post appellé \n')
   delete req.post.content.url
   Posts.findOneAndUpdate({ _id: req.post._id }, { $inc: { 'views.viewsNumber': 1 } })
-    .then(post => {
-      if (req.post.views.viewsNumber < req.post.views.viewsLimit) { res.status(200).json(req.post) } else { res.status(400).json({ error: 'Post plus disponible' }) }
-    })
+  .then(post => {
+    if (req.post.views.viewsNumber < req.post.views.viewsLimit) { res.status(200).json(req.post) } else { res.status(400).json({ error: 'Post plus disponible' }) }
+  })
   // console.log("Post demandé" + JSON.stringify(req.post))
   // return res.status(200).json(req.post).catch( error => res.status(400).json({error: error}));
 }
 
 exports.editPost = (req, res, next) => {
-  const post = new Post({
-    _id: req.params.id,
-    caption: req.body.content.caption,
-    url: req.body.content.url,
-    userId: req.body.postedBy.userId
+  let post = req.post;
+  const updatePost = new Post({
+    _id: post._id,
+
+    postedBy: {...post.postedBy},
+
+    content: {...req.body.content, url: post.content.url},
+
+    views: {
+      viewsNumber: post.views.viewsNumber,
+      viewsLimit: req.body.views.viewsLimit,
+      allowedViewers: {...req.body.views.allowedViewers},
+    },
+
+    date: {
+      uploadDate: post.date.uploadDate,
+      expiryDate: req.body.date.expiryDate,
+    },
+
+    likes: {...post.likes},
+    comments: {...post.comments}
   })
-  Posts.updateOne({ _id: req.params.id }, image).then(
-    () => {
+  Posts.updateOne({ _id: post._id }, updatePost)
+  .then( () => {
       res.status(201).json({
-        message: 'Image updated successfully!'
+        message: 'Post updated successfully!'
       })
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({ error: error })
-    }
-  )
+    })
+  .catch(error => {res.status(400).json({ error: error })})
 }
 
 exports.deletePost = (req, res, next) => {

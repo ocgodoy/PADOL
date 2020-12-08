@@ -9,7 +9,7 @@ class EditPost extends Component {
     super();
     this.state = {
       title: '',
-      content: '',
+      caption: '',
       post: {},
       user: {},
       redirectToProfile: false,
@@ -25,9 +25,12 @@ class EditPost extends Component {
     getPost(postId, token).then(data => {
       if (data.err) console.log(data.err);
       this.setState({
-        title: data.title,
-        content: data.content,
-        post: data,
+        content: {
+          title: data.title,
+          caption: data.content,
+          url: data,
+        },
+        
         user: isAuthenticate().user
       });
     });
@@ -57,18 +60,18 @@ class EditPost extends Component {
   };
 
   isValid = () => {
-    const { title, content, fileSize } = this.state;
+    const { title, caption, fileSize } = this.state;
     if (fileSize > 300000) {
       this.setState({ error: 'File size should be less than 300kb ' });
       return false;
-    } else if (title.length === 0 || content.length === 0) {
+    } else if (title.length === 0 || caption.length === 0) {
       this.setState({ error: 'All field is required' });
       return false;
     }
     return true;
   };
 
-  newPostForm = (title, content) => (
+  newPostForm = (title, caption) => (
     <form>
       <div className='form-group'>
         <label className='text-muted'>Profile Photo</label>
@@ -90,10 +93,10 @@ class EditPost extends Component {
         />
       </div>
       <div className='form-group'>
-        <label className='text-muted'>content</label>
+        <label className='text-muted'>Caption</label>
         <input
-          onChange={this.handleChange('content')}
-          value={content}
+          onChange={this.handleChange('caption')}
+          value={caption}
           type='text'
           className='form-control'
         />
@@ -105,7 +108,7 @@ class EditPost extends Component {
   );
 
   render() {
-    const { title, content, post, redirectToProfile, user, error } = this.state;
+    const { title, caption, post, redirectToProfile, user, error } = this.state;
     if (redirectToProfile) return <Redirect to={`/post/${post._id}`} />;
     return (
       <div className='container'>
@@ -123,13 +126,13 @@ class EditPost extends Component {
         ) : (
           <>
             <img
-              src={`${process.env.REACT_APP_API_URL}/post/photo/${post._id}`}
+              src={`${process.env.REACT_APP_API_URL}/post/:${post._id}`}
               onError={i => (i.target.src = `${DefaultAvatar}`)}
               style={{ width: '30%', height: '15vw', objectFit: 'cover' }}
               alt={post.title}
             />
 
-            {this.newPostForm(title, content)}
+            {this.newPostForm(title, caption)}
           </>
         )}
       </div>

@@ -11,7 +11,7 @@ router.get('/all', postCtrl.getAllPosts)
 router.get('/:postId', postCtrl.getPost)
 router.get('/photo/:postId', postCtrl.getPhotoFromPost)
 router.put('/comment', postCtrl.commentPost)
-// router.put('/:userId/:imageId', auth, postCtrl.editPost);
+router.put('/:imageId', auth, postCtrl.editPost);
 // router.delete('/:userId/:imageId', auth, postCtrl.deletePost);
 
 router.param('postId', postCtrl.loadPostById)
