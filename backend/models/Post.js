@@ -51,4 +51,14 @@ const postSchema = new mongoose.Schema({
   ]
 })
 
+postSchema.methods.tooManyViews = function () {
+  let views = this.views.viewsNumber;
+  let limit = this.views.viewsLimit;
+  if( views > limit ) {
+    return true;
+  } else {
+    return false
+  }
+}
+
 module.exports = mongoose.model('Post', postSchema)
