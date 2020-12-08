@@ -63,9 +63,12 @@ postSchema.methods.tooManyViews = function () {
 
 postSchema.methods.isExpired = function () {
   let expiry = this.date.expiryDate;
+  console.log(this.content.title + ' expiries '+ expiry);
   if( expiry.getTime() <= Date.now() ) {
+    console.log(this.content.title + ' is expired');
     return true;
   } else {
+    console.log(this.content.title + ' is available');
     return false;
   }
 }
