@@ -14,6 +14,7 @@ class SinglePost extends Component {
     redirectToSignin: false,
     like: false,
     likes: 0,
+    error: undefined,
     comments: []
   };
 
@@ -22,7 +23,10 @@ class SinglePost extends Component {
     const token = isAuthenticate().token;
     const postId = this.props.match.params.postId;
     getPost(postId, token).then(data => {
-      if (data.error) console.log(data.error);
+      if (data.error) {
+        console.log(data.error);
+        this.setState({error: data.error})
+      }
       else{
           console.log(data)
           this.setState({
@@ -71,6 +75,7 @@ class SinglePost extends Component {
       like,
       views,
       redirectToSignin,
+      error,
       comments
     } = this.state;
     let photoUrl = post
@@ -79,6 +84,7 @@ class SinglePost extends Component {
     const posterId = postedBy ? postedBy._id : '';
     const posterName = postedBy ? postedBy.pseudo : 'Unknown';
     if (redirectToSignin) return <Redirect to='/signin' />;
+    if (error) return <Redirect to='/post/expired' />;
     return (
       <div className='container'>
         {!post.title ? (
