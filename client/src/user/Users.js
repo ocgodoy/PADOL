@@ -30,10 +30,10 @@ class Users extends Component {
             className='img-thumbnail'
             src={`${process.env.REACT_APP_API_URL}/user/photo/${user._id}`}
             onError={i => (i.target.src = `${DefaultAvatar}`)}
-            alt={user.user.pseudo}
+            alt={user.pseudo}
           />
           <div className='card-body'>
-            <h5 className='card-title'>{user.user.pseudo}</h5>
+            <h5 className='card-title'>{user.pseudo}</h5>
             <p className='card-text'>{user.auth.email}</p>
             <Link
               to={`/user/${user._id}`}
