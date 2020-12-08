@@ -54,10 +54,19 @@ const postSchema = new mongoose.Schema({
 postSchema.methods.tooManyViews = function () {
   let views = this.views.viewsNumber;
   let limit = this.views.viewsLimit;
-  if( views > limit ) {
+  if( views >= limit ) {
     return true;
   } else {
     return false
+  }
+}
+
+postSchema.methods.isExpired = function () {
+  let expiry = this.date.expiryDate;
+  if( expiry.getTime() <= Date.now() ) {
+    return true;
+  } else {
+    return false;
   }
 }
 

@@ -117,8 +117,7 @@ exports.getAllPosts = (req, res, next) => {
   .then( posts => {
       posts.forEach( post => {
         let postToTest = new Post({...post})
-        postToTest.tooManyViews();
-        if( postToTest.tooManyViews() === false ){
+        if( postToTest.tooManyViews() === false | postToTest.isExpired() === false){
           allPosts.push(postToTest);
         }
       })
