@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { isAuthenticate } from '../auth';
 import DefaultAvatar from '../images/post.jpg';
-import { getPost, likePost, unlikePost, getUrl } from './apiPost';
+import { getPost, likePost, unlikePost, getBase64Photo } from './apiPost';
 import { Link, Redirect } from 'react-router-dom';
 import DeletePost from './DeletePost';
 import Comment from './Comment';
@@ -12,7 +12,7 @@ class SinglePost extends Component {
     post: {},
     postId:{},
     postedBy: {},
-    url:{},
+    B64photo:{},
     date: null,
     redirectToSignin: false,
     like: false,
@@ -47,7 +47,7 @@ class SinglePost extends Component {
         }
     });
 
-    getUrl(postId, token).then(B64photo => {
+    getBase64Photo(postId, token).then(B64photo => {
       if (B64photo.error) console.log(B64photo.error);
       else{
           console.log("voici la photo en base 64", B64photo)

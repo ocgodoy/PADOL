@@ -12,20 +12,6 @@ export const createPost = (userId, token, post) => {
     // .catch(err => console.log(err));
 }
 
-export const getPhotoPost = (postId, token) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/post/photo/all`, {
-    method: 'GET',
-    'Content-Type': 'application/json',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    },
-    mode: 'cors'
-  })
-    .then(res => res.json())
-    .catch(err => console.log(err))
-}
 
 export const editPost = (postId, token, post) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/photo/${postId}`, {
@@ -70,7 +56,7 @@ export const getPost = (postId, token) => {
     .catch(err => console.log(err))
 }
 
-export const getUrl = (postId, token) => {
+export const getBase64Photo = (postId, token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/photo/${postId}`, {
     method: 'GET',
     'Content-Type': 'application/json',
