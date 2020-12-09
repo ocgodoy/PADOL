@@ -70,6 +70,21 @@ export const getBase64Photo = (postId, token) => {
     .catch(err => console.log(err))
 }
 
+export const getPhotoPost = (postId, token) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/post/photo/${postId}`, {
+    method: 'GET',
+    'Content-Type': 'application/json',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(res => res.json())
+    .catch(err => console.log(err))
+}
+
+
 export const getPostByUser = (userId, token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/by/${userId}`, {
     method: 'GET',
