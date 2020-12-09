@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { getAllPost, getPhotoPost } from './apiPost'
 import { isAuthenticate } from '../auth'
-import DefaultAvatar from '../images/post.jpg'
+import DefaultAvatar from '../images/avatar.png'
 import { Link } from 'react-router-dom'
 
 class Posts extends Component {
@@ -24,7 +24,7 @@ class Posts extends Component {
       <div className='row'>
         {posts.map(post => {
           const photoUrl = post
-            ? `${process.env.REACT_APP_API_URL}/post/photo/${post._id}`
+            ?  'data:image/png;base64,' + `${process.env.REACT_APP_API_URL}/post/${post._id}`
             : DefaultAvatar
           const token = isAuthenticate().token
           const test = JSON.stringify(getPhotoPost(post._id, token))
@@ -79,7 +79,7 @@ class Posts extends Component {
     const { posts } = this.state
     return (
       <div className='container'>
-        {!posts.length || posts.length == 'undefined' ? (
+        {!posts.length || posts.length === 'undefined' ? (
           <div className='jumbotron text-center'>
             <h2>Welcome to Social Network</h2>
           </div>

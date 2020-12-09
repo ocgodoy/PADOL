@@ -3,6 +3,8 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const User = require('./models/User')
 
+const path = require('path');
+
 const port = 8800
 const app = express()
 
@@ -28,7 +30,7 @@ mongoose.connect('mongodb+srv://padol_usr:S9_PaDoL_MMK@padolcluster.pn3hp.mongod
 
 // Lecture des corps de requête en json
 app.use(bodyParser.json())
-
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/user', userRoutes)
 app.use('/post', postRoutes)
 

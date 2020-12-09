@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import { isAuthenticate } from '../auth';
 import DefaultAvatar from '../images/post.jpg';
-import { getPost, likePost, unlikePost } from './apiPost';
+import { getPost, likePost, unlikePost, getUrl } from './apiPost';
 import { Link, Redirect } from 'react-router-dom';
 import DeletePost from './DeletePost';
 import Comment from './Comment';
+import axios from 'axios';
+import { get } from 'mongoose';
 class SinglePost extends Component {
   state = {
     post: {},
     postId:{},
     postedBy: {},
+    url:{},
     date: null,
     redirectToSignin: false,
     like: false,
@@ -21,14 +24,16 @@ class SinglePost extends Component {
     if (!isAuthenticate()) return this.setState({ redirectToSignin: true });
     const token = isAuthenticate().token;
     const postId = this.props.match.params.postId;
+
     getPost(postId, token).then(data => {
       if (data.error) console.log(data.error);
       else{
-          console.log(data)
+          console.log("voici les données", data)
           this.setState({
             post: data.content,
             postedBy: data.postedBy,
             postId: data._id,
+
             date: data.date,
             views: data.views,
             likes: data.likes.likers.length,
@@ -37,8 +42,18 @@ class SinglePost extends Component {
           });
         }
     });
-  }
 
+    getUrl(postId, token).then(B64photo => {
+      if (B64photo.error) console.log(B64photo.error);
+      else{
+          console.log("voici la photo en base 64", B64photo)
+          this.setState({
+            B64photo : B64photo,
+          });
+        }
+    });
+  }
+  
   checkLike = data => {
     const userId = isAuthenticate().user._id;
     return {}
@@ -66,6 +81,7 @@ class SinglePost extends Component {
       postedBy,
       postId,
       date,
+      B64photo,
       loading,
       likes,
       like,
@@ -73,9 +89,12 @@ class SinglePost extends Component {
       redirectToSignin,
       comments
     } = this.state;
-    let photoUrl = post
-      ? `${process.env.REACT_APP_API_URL}/post/photo/${postId}`
-      : DefaultAvatar;
+
+
+    console.log("this.state" , this.state)
+    let photoUrl = 'data:image/png;base64,' + B64photo;
+    console.log(photoUrl);
+
     const posterId = postedBy ? postedBy._id : '';
     const posterName = postedBy ? postedBy.pseudo : 'Unknown';
     if (redirectToSignin) return <Redirect to='/signin' />;
@@ -88,13 +107,14 @@ class SinglePost extends Component {
         ) : (
           <>
             <h2 className='mt-5 mb-5 display-2'>{post.title}</h2>
+            <div width="40" height="30">
             <img
               className='card-img-top'
-              src={photoUrl}
+              src = {photoUrl}
               onError={i => (i.target.src = `${DefaultAvatar}`)}
-              style={{ width: '100%', height: '30vw', objectFit: 'cover' }}
-              alt='Card image cap'
-            />
+              style={{ width: '10', height: '10', objectFit: 'cover' }}
+              alt='embeded'
+            /></div>
             <br />
             <br />
 

@@ -20,19 +20,20 @@ class NewPost extends Component {
       fileSize: 0
     };
   }
-
+  
   componentDidMount() {
     this.postData = new FormData();
     this.setState({ user: isAuthenticate().user });
   }
-
+  
   handleChange = name => e => {
     let value = name === 'photo' ? e.target.files[0] : e.target.value;
     let fileSize = name === 'photo' ? e.target.files[0].size : 0;
     this.postData.set(name, value);
     this.setState({ [name]: value, error: '', fileSize });
+    console.log(this.setState);
   };
-
+  
   clickSubmit = e => {
     e.preventDefault();
     if (this.isValid()) {
@@ -40,7 +41,7 @@ class NewPost extends Component {
       const { user } = this.state;
       const token = isAuthenticate().token;
       this.postData.set("userId", user._id)
-
+      
       createPost(user._id, token, this.postData).then(res => {
         if (res.error) console.log(res.error);
         else {
@@ -49,7 +50,7 @@ class NewPost extends Component {
       });
     }
   };
-
+  
   isValid = () => {
     const { title, caption, fileSize, viewsLimit, timeLimit } = this.state;
     if (fileSize > 300000) {
@@ -61,111 +62,116 @@ class NewPost extends Component {
     }
     return true;
   };
-
+  
   newPostForm = (title, caption, viewsLimit, timeLimit) => (
     <form>
-      <div className='form-group'>
-        <label className='text-muted'>Profile Photo</label>
-        <input
-          onChange={this.handleChange('photo')}
-          type='file'
-          accept='images/*'
-          className='form-control'
-        />
-      </div>
-      <div className='form-group'>
-        <label className='text-muted'>Title</label>
-        <input
-          onChange={this.handleChange('title')}
-          value={title}
-          type='text'
-          className='form-control'
-        />
-      </div>
-      <div className='form-group'>
-        <label className='text-muted'>Caption</label>
-        <input
-          onChange={this.handleChange('caption')}
-          value={caption}
-          type='text'
-          className='form-control'
-        />
-      </div>
-      <div className='form-group'>
-          <label className='text-muted'>
-            Limite de temps :
-          </label>
-          <div>
-            <select value={timeLimit} onChange={this.handleChange('timeLimit')}>
-              <option value="432000000">Aucune</option>
-              <option value="60000">1 minute</option>
-              <option value="900000">15 minutes</option>
-              <option value="36000000">1 heure</option>
-              <option value="18000000">5 heures</option>
-            </select>
-            </div>
-      </div>
-      <div className='form-group'>
-          <label className='text-muted'>
-            Limite de vues :
-          </label>
-          <div>
-            <select value={viewsLimit} onChange={this.handleChange('viewsLimit')}>
-              <option value="1000">Aucune</option>
-              <option value="5">5 vues</option>
-              <option value="15">15 vues</option>
-              <option value="50">50 vues</option>
-              <option value="200">200 vues</option>
-            </select>
-            </div>
-      </div>
-
-      <button onClick={this.clickSubmit} className='btn btn-raised btn-primary'>
-        Create
-      </button>
+    <div className='form-group'>
+    <label className='text-muted'>Profile Photo</label>
+    <input
+    onChange={this.handleChange('photo')}
+    type='file'
+    accept='images/*'
+    className='form-control'
+    />
+    </div>
+    
+    <div className='form-group'>
+    <label className='text-muted'>Profile Photo</label>
+    <img
+    src={`${process.env.REACT_APP_LOCAL_URL}/post/`}
+    onError={i => (i.target.src = `${DefaultAvatar}`)}
+    style={{ width: "30%", height: "15vw", objectFit: "cover" }}
+    /> 
+    </div>
+    
+    <div className='form-group'>
+    <label className='text-muted'>Title</label>
+    <input
+    onChange={this.handleChange('title')}
+    value={title}
+    type='text'
+    className='form-control'
+    />
+    </div>
+    <div className='form-group'>
+    <label className='text-muted'>Caption</label>
+    <input
+    onChange={this.handleChange('caption')}
+    value={caption}
+    type='text'
+    className='form-control'
+    />
+    </div>
+    <div className='form-group'>
+    <label className='text-muted'>
+    Limite de temps :
+    </label>
+    <div>
+    <select value={timeLimit} onChange={this.handleChange('timeLimit')}>
+    <option value="432000000">Aucune</option>
+    <option value="60000">1 minute</option>
+    <option value="900000">15 minutes</option>
+    <option value="36000000">1 heure</option>
+    <option value="18000000">5 heures</option>
+    </select>
+    </div>
+    </div>
+    <div className='form-group'>
+    <label className='text-muted'>
+    Limite de vues :
+    </label>
+    <div>
+    <select value={viewsLimit} onChange={this.handleChange('viewsLimit')}>
+    <option value="1000">Aucune</option>
+    <option value="5">5 vues</option>
+    <option value="15">15 vues</option>
+    <option value="50">50 vues</option>
+    <option value="200">200 vues</option>
+    </select>
+    </div>
+    </div>
+    
+    <button onClick={this.clickSubmit} className='btn btn-raised btn-primary'>
+    Create
+    </button>
     </form>
-  );
-
-  render() {
-    const {
-      title,
-      caption,
-      redirectToProfile,
-      user,
-      viewsLimit,
-      timeLimit,
-      error,
-      loading
-    } = this.state;
-    if (redirectToProfile) return <Redirect to={`/user/${user._id}`} />;
-    return (
-      <div className='container'>
+    );
+    
+    render() {
+      const {
+        title,
+        caption,
+        redirectToProfile,
+        user,
+        viewsLimit,
+        timeLimit,
+        error,
+        loading
+      } = this.state;
+      if (redirectToProfile) return <Redirect to={`/user/${user._id}`} />;
+      return (
+        <div className='container'>
         <h2 className='mt-5 mb-5'>Create Post</h2>
         <div
-          className='alert alert-danger'
-          style={{ display: error ? '' : 'none' }}
+        className='alert alert-danger'
+        style={{ display: error ? '' : 'none' }}
         >
-          {error}
+        {error}
         </div>
         {loading ? (
           <div className='jumbotron text-center'>
-            <h2>Loading...</h2>
+          <h2>Loading...</h2>
           </div>
-        ) : (
-          ''
-        )}
-
-        {/* <img
-                    src={`${process.env.REACT_APP_API_URL}/post/photo/${id}`}
-                    onError={i => (i.target.src = `${DefaultAvatar}`)}
-                    style={{ width: "30%", height: "15vw", objectFit: "cover" }}
-                    alt={name}
-                /> */}
-
-        {this.newPostForm(title, caption, viewsLimit, timeLimit)}
-      </div>
-    );
-  }
-}
-
-export default NewPost;
+          ) : (
+            ''
+            )}
+            
+            
+            {this.newPostForm(title, caption, viewsLimit, timeLimit)}
+            </div>
+            );
+          }
+        }
+        
+        export default NewPost;
+        

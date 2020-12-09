@@ -44,22 +44,23 @@ exports.createPost = (req, res, next) => {
     }
 
     if (files.photo) {
+      //postTest.content.url = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
       postTest.content.url = fs.readFileSync(files.photo.path)
       postTest.content.contentType = files.photo.type
     }
     const post = new Post({ ...postTest })
     Posts.insertOne(post)
       .then(() => {
-        res.status(201).json({ message: 'Post saved successfully!' })
+        res.status(201).json({ message: 'Post saved successfully! (CreatPost)' })
       })
       .catch(error => { res.status(400).json({ error: error }) })
   })
 }
 
 exports.getPhotoFromPost = (req, res) => {
-  console.log('Get photo Post appelé')
+  console.log('Get photo Post appelé (getPhotoFromPost)')
   if (req.post.content.url) {
-    console.log('Photo trouvée')
+    console.log('Photo trouvée (getPhotoFromPost)')
     res.set(('Content-Type', req.post.content.contentType))
     return res.send(req.post.content.url)
   } else res.send(undefined)
@@ -67,7 +68,7 @@ exports.getPhotoFromPost = (req, res) => {
 
 exports.getPost = (req, res) => {
   console.log('Get post appellé \n')
-  delete req.post.content.url
+  //delete req.post.content.url
   Posts.findOneAndUpdate({ _id: req.post._id }, { $inc: { 'views.viewsNumber': 1 } })
     .then(post => {
       if (req.post.views.viewsNumber < req.post.views.viewsLimit) { res.status(200).json(req.post) } else { res.status(400).json({ error: 'Post plus disponible' }) }
