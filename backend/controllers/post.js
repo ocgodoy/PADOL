@@ -113,17 +113,18 @@ exports.deletePost = (req, res, next) => {
 
 exports.getAllPosts = (req, res, next) => {
   console.log('Get all posts demandé \n')
-  console.log('body  ' + JSON.stringify(req.body))
-  Posts.find().toArray().then(
-    (images) => {
-      console.log('post: ' + images)
-      res.status(200).json(images)
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({ error: error })
-    }
-  )
+  let allPosts = [];
+  Posts.find().toArray()
+  .then( posts => {
+      posts.forEach( post => {
+        let postToTest = new Post({...post})
+        if( postToTest.tooManyViews() === false && postToTest.isExpired() === false){
+          allPosts.push(postToTest);
+        }
+      })
+      res.status(200).json(allPosts);
+    })
+  .catch(error => {res.status(400).json({ error: error })})
 }
 
 exports.commentPost = (req, res) => {
