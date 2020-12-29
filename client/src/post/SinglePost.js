@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, useImperativeHandle } from 'react';
 import { isAuthenticate } from '../auth';
 import DefaultAvatar from '../images/post.jpg';
 import { getPost, likePost, unlikePost, getBase64Photo } from './apiPost';
 import { Link, Redirect } from 'react-router-dom';
 import DeletePost from './DeletePost';
 import Comment from './Comment';
-import axios from 'axios';
-import { get } from 'mongoose';
+
 class SinglePost extends Component {
   state = {
     post: {},
@@ -15,16 +14,20 @@ class SinglePost extends Component {
     B64photo:{},
     date: null,
     redirectToSignin: false,
-    like: false,
+    like: {},
     likes: 0,
+    likers: [],
     error: undefined,
     comments: []
   };
 
+
+  /**********************************RECUPERATION DONNEE DE LA BDD*********************************/ 
   componentDidMount() {
     if (!isAuthenticate()) return this.setState({ redirectToSignin: true });
     const token = isAuthenticate().token;
     const postId = this.props.match.params.postId;
+
 
     getPost(postId, token).then(data => {
       if (data.error) {
@@ -32,47 +35,70 @@ class SinglePost extends Component {
         this.setState({error: data.error})
       }
       else{
-          console.log("voici les données", data)
+          //console.log("voici les données", data)
           this.setState({
             post: data.content,
             postedBy: data.postedBy,
             postId: data._id,
-
             date: data.date,
             views: data.views,
-            likes: data.likes.likers.length,
-            like: this.checkLike(data.likes),
+            likes: data.likes.numberOfLikes, //nb de like
+            liker: data.likes.likers, //donnée Id des likers
+            like : this.checkLike(data), default: false, //verifie que la personne du like a déja liké
             comments: data.comments
           });
         }
+        console.log("mes data",data);
     });
+
 
     getBase64Photo(postId, token).then(B64photo => {
       if (B64photo.error) console.log(B64photo.error);
       else{
-          console.log("voici la photo en base 64", B64photo)
+          //console.log("voici la photo en base 64", B64photo)
           this.setState({
             B64photo : B64photo,
           });
         }
     });
   }
+  /**********************************FIN DE RECUPERATION DONNEE DE LA BDD*********************************/ 
+  
+  /*
+  state.like = true signifie que le statue est liké
+  sate.like = false signifie que le statue n'est pas liké
+  */
   
   checkLike = data => {
     const userId = isAuthenticate().user._id;
-    return {}
-    //return data.indexOf(userId) > -1;
+    console.log("mon ID ", userId );
+    console.log("tableau ID ", data.likes.likers);
+    console.log("mon id est présent dans le tableau ", data.likes.likers.includes(userId));
+    if(data.likes.likers.includes(userId)){return true}
   };
 
   likeToggle = () => {
     const token = isAuthenticate().token;
     const postId = this.props.match.params.postId;
-    const userId = isAuthenticate().user._id;
-    let callApi = this.state.like ? unlikePost : likePost;
-    callApi(postId, token, userId).then(data => {
-      if (data.err) console.log(data.err);
-      this.setState({ like: !this.state.like, likes: data.likes.length });
-    });
+    const userId = isAuthenticate().user._id
+    
+    if (this.state.like == true){
+      this.state.liker.pop();
+      this.setState({ like: !this.state.like, 
+                      liker: this.state.liker,
+                      likes: this.state.liker.length
+                    });
+      console.log("mes données unlike = ",this.state.like, this.state.likes, this.state.liker );
+    }
+    else{
+      this.state.liker.push(userId);
+      this.setState({ like: !this.state.like, 
+                      liker : this.state.liker,
+                      likes: this.state.liker.length
+                    });
+      console.log("mes données like = ",this.state.like, this.state.likes, this.state.liker );
+    }
+    likePost(postId, token, userId, this.state.like, this.state.liker.length, this.state.liker )
   };
 
   updateComments = comments => {
@@ -95,10 +121,8 @@ class SinglePost extends Component {
       comments
     } = this.state;
 
-
-    console.log("this.state" , this.state)
+    
     let photoUrl = 'data:image/png;base64,' + B64photo;
-    console.log(photoUrl);
 
     const posterId = postedBy ? postedBy._id : '';
     const posterName = postedBy ? postedBy.pseudo : 'Unknown';
@@ -133,7 +157,7 @@ class SinglePost extends Component {
             ) : (
               <h3 onClick={this.likeToggle}>
                 <i className='fas fa-thumbs-down text-danger'>
-                  {''} {likes} Like
+                  {''} {likes} Unlike
                 </i>
               </h3>
             )}

@@ -110,29 +110,29 @@ export const removePost = (postId, token) => {
     .catch(err => console.log(err))
 }
 
-export const likePost = (postId, token, userId) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/post/like`, {
+export const likePost = (postId, token, userId, status, numberOfLikes, LikersId) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/post/like/${postId}`, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ userId, postId })
+    body: JSON.stringify({ userId, postId, status, numberOfLikes, LikersId })
   })
     .then(res => res.json())
     .catch(err => console.log(err))
 }
 
-export const unlikePost = (postId, token, userId) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/post/unlike`, {
+export const unlikePost = (postId, token, userId, status, numberOfLikes, LikersId) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/post/unlike/${postId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ userId, postId })
+    body: JSON.stringify({ postId, userId, status, numberOfLikes, LikersId })
   })
     .then(res => res.json())
     .catch(err => console.log(err))

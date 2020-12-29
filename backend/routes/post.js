@@ -15,7 +15,7 @@ router.get('/photo/:postId', postCtrl.getPhotoFromPost)
 router.put('/comment', postCtrl.commentPost)
 // router.put('/:userId/:imageId', auth, postCtrl.editPost);
 // router.delete('/:userId/:imageId', auth, postCtrl.deletePost);
-
+router.put('/like/:postId/', postCtrl.likePost)
 router.param('postId', postCtrl.loadPostById)
 router.param('userId', loadUserById)
 

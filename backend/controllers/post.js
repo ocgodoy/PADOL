@@ -170,3 +170,29 @@ exports.updateViews = (req, res, next) => {
       }
     })
 }
+
+
+exports.likePost = (req, res, next) => {
+  delete req.body.userId;
+
+  const like = {}
+  like.numberOfLikes = req.body.numberOfLikes;
+  like.likers = req.body.LikersId;
+  like.likers = req.body.LikersId;
+  
+  Posts.findOneAndUpdate(
+    { _id: ObjectId(req.body.postId) },
+    { $set: {likes: like}},
+    {upsert: true}
+  ).then(
+    () => {
+      res.status(201).json({
+        message: 'like added successfully!'
+      })
+    }
+  ).catch(
+    (error) => {
+      res.status(400).json({ error: error })
+    }
+  )
+}
