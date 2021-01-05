@@ -77,11 +77,6 @@ class NewPost extends Component {
     
     <div className='form-group'>
     <label className='text-muted'>Profile Photo</label>
-    <img
-    src={`${process.env.REACT_APP_LOCAL_URL}/post/`}
-    onError={i => (i.target.src = `${DefaultAvatar}`)}
-    style={{ width: "30%", height: "15vw", objectFit: "cover" }}
-    /> 
     </div>
     
     <div className='form-group'>

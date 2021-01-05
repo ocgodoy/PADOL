@@ -1,7 +1,7 @@
 import React, { Component, useImperativeHandle } from 'react';
 import { isAuthenticate } from '../auth';
 import DefaultAvatar from '../images/post.jpg';
-import { getPost, likePost, unlikePost, getBase64Photo } from './apiPost';
+import { getPost, likePost, getBase64Photo } from './apiPost';
 import { Link, Redirect } from 'react-router-dom';
 import DeletePost from './DeletePost';
 import Comment from './Comment';
@@ -35,7 +35,6 @@ class SinglePost extends Component {
         this.setState({error: data.error})
       }
       else{
-          //console.log("voici les données", data)
           this.setState({
             post: data.content,
             postedBy: data.postedBy,
@@ -48,14 +47,12 @@ class SinglePost extends Component {
             comments: data.comments
           });
         }
-        console.log("mes data",data);
     });
 
 
     getBase64Photo(postId, token).then(B64photo => {
       if (B64photo.error) console.log(B64photo.error);
       else{
-          //console.log("voici la photo en base 64", B64photo)
           this.setState({
             B64photo : B64photo,
           });
@@ -69,11 +66,11 @@ class SinglePost extends Component {
   sate.like = false signifie que le statue n'est pas liké
   */
   
+
+
+  /***************************************FONCTIONS LIKE****************************************************/
   checkLike = data => {
     const userId = isAuthenticate().user._id;
-    console.log("mon ID ", userId );
-    console.log("tableau ID ", data.likes.likers);
-    console.log("mon id est présent dans le tableau ", data.likes.likers.includes(userId));
     if(data.likes.likers.includes(userId)){return true}
   };
 
@@ -88,7 +85,6 @@ class SinglePost extends Component {
                       liker: this.state.liker,
                       likes: this.state.liker.length
                     });
-      console.log("mes données unlike = ",this.state.like, this.state.likes, this.state.liker );
     }
     else{
       this.state.liker.push(userId);
@@ -96,15 +92,16 @@ class SinglePost extends Component {
                       liker : this.state.liker,
                       likes: this.state.liker.length
                     });
-      console.log("mes données like = ",this.state.like, this.state.likes, this.state.liker );
     }
     likePost(postId, token, userId, this.state.like, this.state.liker.length, this.state.liker )
   };
-
+/***************************************FONCTION COMMENT****************************************************/
   updateComments = comments => {
     this.setState({ comments: comments });
   };
 
+
+/**********************************************AFFICHAGE****************************************************/
   render() {
     const {
       post,
@@ -122,7 +119,7 @@ class SinglePost extends Component {
     } = this.state;
 
     
-    let photoUrl = 'data:image/png;base64,' + B64photo;
+    let photoUrl = 'data:image/jpg;base64,' + B64photo;
 
     const posterId = postedBy ? postedBy._id : '';
     const posterName = postedBy ? postedBy.pseudo : 'Unknown';
@@ -137,14 +134,12 @@ class SinglePost extends Component {
         ) : (
           <>
             <h2 className='mt-5 mb-5 display-2'>{post.title}</h2>
-            <div width="40" height="30">
             <img
               className='card-img-top'
               src = {photoUrl}
               onError={i => (i.target.src = `${DefaultAvatar}`)}
-              style={{ width: '10', height: '10', objectFit: 'cover' }}
-              alt='embeded'
-            /></div>
+              style={{ width: '30%', height: '15vw', objectFit: 'cover' }}
+            />
             <br />
             <br />
 
@@ -164,8 +159,7 @@ class SinglePost extends Component {
             <p className='card-text'>{post.content}</p>
             <br />
             <p className='font-italic mark'>
-              Posted By <Link to={`/user/${posterId}`}>{posterName}</Link>
-              on {new Date(date.uploadDate).toDateString()} at {(new Date(date.uploadDate)).getHours()}:{(new Date(date.uploadDate)).getMinutes()}
+              Posted By <Link to={`/user/${posterId}`}>{posterName}</Link> on {new Date(date.uploadDate).toDateString()} at {(new Date(date.uploadDate)).getHours()}:{(new Date(date.uploadDate)).getMinutes()}
             </p>
             <p> Vues: {views.viewsNumber}/{views.viewsLimit}
             </p>
@@ -180,7 +174,7 @@ class SinglePost extends Component {
                 >
                   Update Post
                 </Link>
-                <DeletePost postId={post._id} />
+                <DeletePost postId={postId} userId={isAuthenticate().user._id}/>
               </div>
             ) : (
               ''
