@@ -18,5 +18,6 @@
   "homepage": "https://github.com/ocgodoy/PADOL#readme",
   "devDependencies": {
     "standardjs": "^1.0.0-alpha"
-  }
+  },
+  "dependencies": {}
 }
