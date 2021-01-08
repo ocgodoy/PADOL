@@ -13,6 +13,7 @@ import NewPost from './post/NewPost'
 import SinglePost from './post/SinglePost'
 import EditPost from './post/EditPost'
 import ExpiredPost from './post/ExpiredPost'
+import Friends from './friend/Friends'
 
 const MainRouter = () => (
   <div>
@@ -33,6 +34,7 @@ const MainRouter = () => (
       <PrivateRoute exact path='/post/expired' component={ExpiredPost} />
       <PrivateRoute exact path='/post/:postId' component={SinglePost} />
       <PrivateRoute exact path='/post/edit/:postId' component={EditPost} />
+      <PrivateRoute exact path='/friends/all/:userId' component={Friends} />
     </Switch>
   </div>
 )

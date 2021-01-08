@@ -38,7 +38,7 @@ const postSchema = new mongoose.Schema({
 
   likes: {
     numberOfLikes: { type: Number, default: 0 },
-    likers: [{ type: ObjectId, ref: 'User' }]
+    likers: [{ type: String}]
   },
 
   comments: [

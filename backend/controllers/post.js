@@ -98,17 +98,10 @@ exports.editPost = (req, res, next) => {
 }
 
 exports.deletePost = (req, res, next) => {
-  Posts.deleteOne({ _id: req.params.id }).then(
-    () => {
-      res.status(200).json({
-        message: 'Image successfully deleted !'
-      })
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({ error: error })
-    }
-  )
+  console.log("yeaaaaaaaaaaaaaaaaaaaaaaah")
+  Posts.deleteOne({ _id: ObjectId(req.body.postId) })
+  .then( () => { res.status(200).json({ message: 'post successfully deleted !' }) } )
+  .catch( (error) => {res.status(400).json({ error: error }) } )
 }
 
 exports.getAllPosts = (req, res, next) => {
@@ -169,4 +162,20 @@ exports.updateViews = (req, res, next) => {
         res.status(200).json({ message: 'image found' })
       }
     })
+}
+
+
+exports.likePost = (req, res, next) => {
+  delete req.body.userId;
+  const like = {}
+  like.numberOfLikes = req.body.numberOfLikes;
+  like.likers = req.body.LikersId;
+  like.likers = req.body.LikersId;
+  
+  Posts.findOneAndUpdate(
+    { _id: ObjectId(req.body.postId) },
+    { $set: {likes: like}},
+    {upsert: true})
+    .then( () => {res.status(201).json({message: 'like added successfully!'}) } )
+    .catch( (error) => {res.status(400).json({ error: error }) } )
 }

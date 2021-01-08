@@ -6,6 +6,8 @@ const ObjectId = require('mongodb').ObjectId
 const db = mongoose.connection
 const Users = db.collection('Users')
 const User = require('../models/User')
+const Friends = db.collection('Friends')
+const Friend = require('../models/Friend')
 
 exports.loadUserById = (req, res, next, id) => {
   Users.findOne({ _id: ObjectId(id) }).then(
@@ -29,6 +31,7 @@ exports.signup = (req, res, next) => {
       if (!user) {
         // console.log('email is available')
         const newUser = new User(req.body)
+        const friends = new Friend({ "userId": newUser._id})
         // console.log(newUser);
         newUser.encryptPassword(newUser => {
           // console.log(newUser);
@@ -36,6 +39,7 @@ exports.signup = (req, res, next) => {
             .then(() => res.status(201).json({ message: 'User created' }))
             .catch(error => res.status(400).json({ error }))
         })
+        Friends.insertOne(friends)
       } else {
         return res.status(401).json({ error: 'User already exists !' })
       }
