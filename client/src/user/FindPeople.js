@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { findPeople, follow } from './apiUser';
+import { findPeople, getAllUser} from './apiUser';
 import DefaultProfile from '../images/avatar.png';
-import { Link } from 'react-router-dom';
 import { isAuthenticate } from '../auth';
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import { Redirect } from 'react-router-dom';
+import { AiFillMail } from 'react-icons/ai';
+import { FaUserCircle } from 'react-icons/fa';
 
 class Users extends Component {
   constructor() {
@@ -10,89 +13,92 @@ class Users extends Component {
     this.state = {
       users: [],
       error: '',
-      open: false,
-      followMessage: ''
+      pseudoTable: [],
+      emailTable: [],
+      researchType: "pseudo",
+      redirect: false,
+      id_redirect: undefined
     };
   }
 
   componentDidMount() {
     const userId = isAuthenticate().user._id;
     const token = isAuthenticate().token;
+    var pseudoTable = [];
+    var emailTable = [];
+    getAllUser().then(users => (users.forEach((user) => {
+      pseudoTable.push({id: user._id, name: user.about.pseudo});
+      emailTable.push({id: user._id, name: user.auth.email})
+    }),
+    this.setState({pseudoTable: pseudoTable}),
+    this.setState({emailTable: emailTable})
 
-    findPeople(userId, token).then(data => {
-      if (data.error) {
-        console.log(data.error);
-      } else {
-        this.setState({ users: data });
-      }
-    });
+    ))
+
+
   }
 
-  clickFollow = (user, i) => {
-    const userId = isAuthenticate().user._id;
-    const token = isAuthenticate().token;
-
-    follow(userId, token, user._id).then(data => {
-      if (data.error) {
-        this.setState({ error: data.error });
-      } else {
-        let toFollow = this.state.users;
-        toFollow.splice(i, 1); // splice out and remove the user from state.users
-        this.setState({
-          users: toFollow,
-          open: true,
-          followMessage: `Following ${user.name}`
-        });
-      }
-    });
+  setSearchToEmail = e => {
+    e.preventDefault();
+    this.setState({researchType: "email"})
   };
 
-  renderUsers = users => (
-    <div className='row'>
-      {users.map((user, i) => (
-        <div className='card col-md-4' key={i}>
-          <img
-            style={{ height: 'auto', width: '30vw' }}
-            className='img-thumbnail'
-            src={`${process.env.REACT_APP_API_URL}/user/photo/${user._id}`}
-            onError={i => (i.target.src = `${DefaultProfile}`)}
-            alt={user.name}
-          />
-          <div className='card-body'>
-            <h5 className='card-title'>{user.name}</h5>
-            <p className='card-text'>{user.email}</p>
-            <Link
-              to={`/user/${user._id}`}
-              className='btn btn-raised btn-primary btn-sm'
-            >
-              View Profile
-            </Link>
-
-            <button
-              onClick={() => this.clickFollow(user, i)}
-              className='btn btn-raised btn-info float-right btn-sm'
-            >
-              Follow
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+  setSearchToPseudo = e => {
+    e.preventDefault();
+    this.setState({researchType: "pseudo"})
+  };
 
   render() {
-    const { users, open, followMessage } = this.state;
+
+  const {pseudoTable, emailTable}= this.state
+  console.log("users vaut " + JSON.stringify(pseudoTable))
+  const handleOnSearch = (string, cached) => {
+    // onSearch returns the string searched and if
+    // the values are cached. If the values are cached
+    // "cached" contains the cached values, if not, returns false
+    console.log(string, cached)
+  }
+
+  const handleOnSelect = (item) => {
+    // the item selected
+    console.log(item)
+    this.setState({id_redirect: item.id})
+    this.setState({redirect: true})
+  }
+
+  const handleOnFocus = () => {
+    console.log('Focused')
+  }
+
+    const {open, followMessage, redirect, id_redirect, researchType } = this.state;
+    if (researchType === "pseudo") var users = pseudoTable
+    if (researchType === "email") var users = emailTable
+    if (redirect) return <Redirect to={`/user/${id_redirect}`} />;
     return (
-      <div className='container'>
-        <h2 className='mt-5 mb-5'>Find People</h2>
-
-        {open && (
-          <div className='alert alert-success'>
-            <p>{followMessage}</p>
+      <div>
+          <div className='jumbotron'>
+            <h2 className='mt-5 mb-5'>Find your friends</h2>
           </div>
-        )}
+          <div>
+          <button className='btn btn-raised btn-primary' onClick= {this.setSearchToPseudo}>
+          <FaUserCircle />
+          </button>
+          <button className='btn btn-raised btn-primary' onClick= {this.setSearchToEmail}>
+          <AiFillMail />
+          </button>
+          </div>
+          <div className='container'>
+            <div style={{ width: 400 }}>
+              <ReactSearchAutocomplete
+                items={users}
+                onSearch={handleOnSearch}
+                onSelect={handleOnSelect}
+                onFocus={handleOnFocus}
+                autoFocus
+              />
+            </div>
 
-        {this.renderUsers(users)}
+      </div>
       </div>
     );
   }
