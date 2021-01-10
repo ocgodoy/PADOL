@@ -24,6 +24,7 @@ class FollowProfileButton extends Component {
   }
 
   componentDidMount() {
+    this.setState({invitedId: this.props.userId})
     getAllRequests(isAuthenticate().user._id).then(requests => {
       this.setState({requests: requests}, console.log("requests vaut " + JSON.stringify(requests) + JSON.stringify(this.props)));
       requests.forEach(request => (request.userId == this.props.userId) ?
@@ -32,10 +33,10 @@ class FollowProfileButton extends Component {
 
       )
       })
-  getAllFriends(isAuthenticate().user._id).then(friends => {
-    this.setState({friends: friends}, console.log("friends vaut " + JSON.stringify(friends)));
-    friends.forEach(friend => (friend.userId == this.props.userId) ? this.setState({isyourfriend: true}) : null)
-    })
+    getAllFriends(isAuthenticate().user._id).then(friends => {
+      this.setState({friends: friends}, console.log("friends vaut " + JSON.stringify(friends)));
+      friends.forEach(friend => (friend.userId == this.props.userId) ? this.setState({isyourfriend: true}) : null)
+      })
   }
 
   clickSubmitAdd = e => {
@@ -80,53 +81,80 @@ class FollowProfileButton extends Component {
       deleteFromRequestList(inviterId, invited, token)
   };
 
-  render() {
-    const {invited, invitationPending, isyourfriend} = this.state
+  renderFriend(){
     return (
-      <div className='d-inline-block'>
-      {isyourfriend ? (
-        <div>
-          <button
-            className='btn btn-raised btn-primary'
-
-          >
-            Friend
-          </button>
-        </div>) :
-
-      ((invitationPending) ? (
-        <div>
+      <div>
         <button
           className='btn btn-raised btn-primary'
-          onClick={this.clickSubmitAccept}
+
         >
-          Accept
+          Friend
         </button>
-        <button
-          className='btn btn-raised btn-danger'
-          onClick={this.clickSubmitRefuse}
-        >
-          Refuse
-        </button>
-        </div>
+      </div>
+    )
+  }
+
+  renderPending(){
+    return (
+      <div>
+      <button
+        className='btn btn-raised btn-primary'
+        onClick={this.clickSubmitAccept}
+      >
+        Accept
+      </button>
+      <button
+        className='btn btn-raised btn-danger'
+        onClick={this.clickSubmitRefuse}
+      >
+        Refuse
+      </button>
+      </div>
+    )
+  }
+
+  renderInvited(){
+    return (
+      <button
+        className='btn btn-raised btn-warning'
+        onClick={this.clickSubmitDelete}
+      >
+        Cancel invitation
+      </button>
+    )
+  }
+
+  renderNoFriend(){
+    return(
+      <button
+        className='btn btn-raised btn-primary mr-5'
+        onClick={this.clickSubmitAdd}
+      >
+        Add friend
+      </button>
+    )
+  }
+
+  render() {
+    const {invitedId, invited, invitationPending, isyourfriend} = this.state
+    return (
+      <div className='d-inline-block'>
+      {isAuthenticate().user._id == this.props.userId ? (
+        null
       ) : (
-        (invited) ? (
-          <button
-            className='btn btn-raised btn-warning'
-            onClick={this.clickSubmitDelete}
-          >
-            Cancel invitation
-          </button>
+        isyourfriend ? (
+          this.renderFriend()) :
+
+        ((invitationPending) ? (
+          this.renderPending()
         ) : (
-          <button
-            className='btn btn-raised btn-primary mr-5'
-            onClick={this.clickSubmitAdd}
-          >
-            Add friend
-          </button>
+          (invited) ? (
+            this.renderInvited()
+          ) : (
+            this.renderNoFriend()
+          )
         )
-      )
-    )}
+      ))}
       </div>
     );
   }
