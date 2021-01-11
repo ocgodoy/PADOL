@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import DatePicker from "react-datepicker";
 import { isAuthenticate } from '../auth';
 import { Redirect } from 'react-router-dom';
 import DefaultAvatar from '../images/post.jpg';
 import { createPost } from './apiPost';
+
+import "react-datepicker/dist/react-datepicker.css";
 
 class NewPost extends Component {
   constructor() {
@@ -124,6 +127,17 @@ class NewPost extends Component {
     <option value="200">200 vues</option>
     </select>
     </div>
+    </div>
+
+    <div className='form-groupe'>
+      <label className='text-muted'>
+        Expires on : 
+      </label>
+      <DatePicker
+        selected={this.state.date}
+        onSelect={this.handleSelect} //when day is clicked
+        onChange={this.handleChange} //only when value has changed
+      />
     </div>
     
     <button onClick={this.clickSubmit} className='btn btn-raised btn-primary'>
