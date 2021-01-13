@@ -3,28 +3,31 @@ import { getAllPost, getPhotoPost } from './apiPost'
 import { isAuthenticate } from '../auth'
 import DefaultAvatar from '../images/avatar.png'
 import { Link } from 'react-router-dom'
+import ScriptTag from 'react-script-tag';
 
 class Posts extends Component {
-  constructor () {
+  constructor() {
     super()
     this.state = {
       posts: []
     }
   }
 
-  componentDidMount () {
+
+  componentDidMount() {
     getAllPost().then(data => {
       if (data.err) console.log(data.err)
       else this.setState({ posts: data })
     })
   }
 
-  renderPost (posts) {
+  renderPost(posts) {
     return (
       <div className='row'>
+        <ScriptTag isHydrating={true} type="text/javascript" src="emoji.js" />
         {posts.map(post => {
           const photoUrl = post
-            ?  'data:image/png;base64,' + `${process.env.REACT_APP_API_URL}/post/${post._id}`
+            ? 'data:image/png;base64,' + `${process.env.REACT_APP_API_URL}/post/${post._id}`
             : DefaultAvatar
           const token = isAuthenticate().token
           const test = JSON.stringify(getPhotoPost(post._id, token))
@@ -75,7 +78,7 @@ class Posts extends Component {
     )
   }
 
-  render () {
+  render() {
     const { posts } = this.state
     return (
       <div className='container'>
@@ -84,8 +87,8 @@ class Posts extends Component {
             <h2>Welcome to Social Network</h2>
           </div>
         ) : (
-          <h2 className='mt-5 mb-5'>Recent Posts</h2>
-        )}
+            <h2 className='mt-5 mb-5'>Recent Posts</h2>
+          )}
 
         {this.renderPost(posts)}
       </div>

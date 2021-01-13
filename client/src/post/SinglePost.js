@@ -24,6 +24,10 @@ class SinglePost extends Component {
 
   /**********************************RECUPERATION DONNEE DE LA BDD*********************************/ 
   componentDidMount() {
+    document.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+    });
+
     if (!isAuthenticate()) return this.setState({ redirectToSignin: true });
     const token = isAuthenticate().token;
     const postId = this.props.match.params.postId;
@@ -57,6 +61,12 @@ class SinglePost extends Component {
             B64photo : B64photo,
           });
         }
+    });
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("contextmenu", (event) => {
+      event.preventDefault();
     });
   }
   /**********************************FIN DE RECUPERATION DONNEE DE LA BDD*********************************/ 

@@ -19,5 +19,8 @@
   "devDependencies": {
     "standardjs": "^1.0.0-alpha"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "react-icons": "^4.1.0"
+  }
 }
