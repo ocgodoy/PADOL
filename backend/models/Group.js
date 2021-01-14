@@ -6,7 +6,7 @@ const groupSchema = new mongoose.Schema({
 
   userList: [
       {
-        users: [{ type: ObjectId, ref: 'User' }]
+        usersID: [{ type: ObjectId, ref: 'User' }]
       }
     ],
 
@@ -14,11 +14,10 @@ const groupSchema = new mongoose.Schema({
 
   info: [
       {
-        groupCreator: { type: ObjectId, ref: 'User' },
-        groupAdmin: [{ type: ObjectId, ref: 'User' }],
         groupUser: [{ type: ObjectId, ref: 'User' }]
       }
     ],
+
   requests:
    [
       {
@@ -26,7 +25,7 @@ const groupSchema = new mongoose.Schema({
         status: {type: Boolean},
         date: { type: Date }
       }
-
+   ]
 })
 
 module.exports = mongoose.model('Group', groupSchema)
