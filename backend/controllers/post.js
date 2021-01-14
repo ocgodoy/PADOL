@@ -3,6 +3,7 @@ const Post = require('../models/Post')
 const formidable = require('formidable')
 const fs = require('fs')
 const ObjectId = require('mongodb').ObjectID
+const { url } = require('inspector')
 // const {getAllFriends} = require('./user');
 
 const db = mongoose.connection
@@ -36,7 +37,6 @@ exports.createPost = (req, res, next) => {
     // post_test.postedBy = ObjectId("5fbdcc5d42682316503994eb")
     postTest.views.viewsLimit = fields.viewsLimit
     postTest.date.expiryDate = new Date((new Date(Date.now())).getTime() + parseInt(fields.timeLimit))
-    console.log(JSON.stringify(postTest))
     if (err) {
       return res.status(400).json({
         err: 'Image could not be uploaded'
@@ -78,24 +78,15 @@ exports.getPost = (req, res) => {
 }
 
 exports.editPost = (req, res, next) => {
-  const post = new Post({
-    _id: req.params.id,
-    caption: req.body.content.caption,
-    url: req.body.content.url,
-    userId: req.body.postedBy.userId
-  })
-  Posts.updateOne({ _id: req.params.id }, image).then(
-    () => {
-      res.status(201).json({
-        message: 'Image updated successfully!'
-      })
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({ error: error })
-    }
-  )
+Posts.findOneAndUpdate(
+  { _id: ObjectId(req.body.postId) },
+  { $set: 
+    {"content.title": req.body.title, "content.caption": req.body.caption },
+  }  )
+  .then( () => {res.status(201).json({message: 'post updated successfully!'}) } )
+  .catch( (error) => {res.status(400).json({ error: error }) } )
 }
+
 
 exports.deletePost = (req, res, next) => {
   console.log("yeaaaaaaaaaaaaaaaaaaaaaaah")
@@ -120,19 +111,27 @@ exports.getAllPosts = (req, res, next) => {
   .catch(error => {res.status(400).json({ error: error })})
 }
 
+
 exports.commentPost = (req, res) => {
-  console.log('Comment demandé sur \n')
   const comment = {}
   comment.author = ObjectId(req.body.userId)
   comment.comment = req.body.comment.text
   comment.date = new Date(Date.now())
   comment.pseudo = req.body.pseudo
-  console.log(JSON.stringify(comment))
+  comment.commentId = ObjectId(req.body.commentId)
+
   Posts.findOneAndUpdate(
     { _id: ObjectId(req.body.postId) },
     { $push: { comments: comment } },
     { new: true }
-  ).then(post => res.json(post, console.log('Commentaires: ' + JSON.stringify(post.comments))))
+  ).then(post => res.json(post))
+}
+
+exports.deleteComment = (req, res) => {
+  Posts.findOneAndUpdate(
+    { _id: ObjectId(req.body.postId) },
+    { $pull: { comments : { commentId : ObjectId(req.body.comment.commentId)} } }
+  ).then(post => res.json(post))
 }
 
 exports.updateViews = (req, res, next) => {
@@ -170,7 +169,7 @@ exports.likePost = (req, res, next) => {
   const like = {}
   like.numberOfLikes = req.body.numberOfLikes;
   like.likers = req.body.LikersId;
-  like.likers = req.body.LikersId;
+
   
   Posts.findOneAndUpdate(
     { _id: ObjectId(req.body.postId) },

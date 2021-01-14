@@ -13,34 +13,50 @@ export const createPost = (userId, token, post) => {
 }
 
 
-export const editPost = (postId, token, post) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/post/photo/${postId}`, {
+export const editPost = (postId, token, title, caption) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/post/editPost/${postId}`, {
     method: 'PUT',
     body: JSON.stringify(postId),
     headers: {
       Accept: 'application/json',
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
     mode: 'cors',
-    body: post
+    body:  JSON.stringify({ postId, title, caption})
   })
     .then(res => res.json())
     .catch(err => console.log(err))
 }
 
 export const getAllPost = () => {
-  const test = { test: 'jojo', opt: 'jaja' }
   return fetch(`${process.env.REACT_APP_API_URL}/post/all`, {
     method: 'GET',
+    'Content-Type': 'application/json',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    mode: 'cors',
   })
     .then(res => res.json())
     // .catch(err => console.log(err));
 }
+/*
+export const getBase64PhotoAll = (token) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/post/photo/all`, {
+    method: 'GET',
+    'Content-Type': 'application/json',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(res => res.json())
+    .catch(err => console.log(err))
+}*/
+
+
 
 export const getPost = (postId, token) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/${postId}`, {
@@ -139,7 +155,7 @@ export const newComment = (postId, token, userId, pseudo, comment) => {
     .catch(err => console.log(err))
 }
 
-export const deleteComment = (postId, token, userId, comment) => {
+export const deleteComment = (postId, token, userId, commentId, comment) => {
   return fetch(`${process.env.REACT_APP_API_URL}/post/deletecomment`, {
     method: 'PUT',
     headers: {
@@ -147,8 +163,8 @@ export const deleteComment = (postId, token, userId, comment) => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ userId, postId, comment })
+    body: JSON.stringify({ userId, postId, commentId, comment })
   })
-    .then(res => res.json())
+    .then(res => res.json(res))
     .catch(err => console.log(err))
 }

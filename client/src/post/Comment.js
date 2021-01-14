@@ -8,7 +8,8 @@ import DeleteComment from './DeleteComment';
 class Comment extends Component {
   state = {
     text: '',
-    error: ''
+    error: '',
+    redirect : false
   };
 
   handleChange = e => this.setState({ text: e.target.value });
@@ -36,8 +37,7 @@ class Comment extends Component {
       newComment(postId, token, userId, pseudo, comment).then(data => {
         if (data.err) console.log(data.err);
         this.setState({ text: '' });
-        this.props.updateComments(data.comments);
-        console.log(data.comments);
+        setTimeout( () => {this.setState({ redirect: true }) }, 100)
       });
     }
   };
@@ -45,6 +45,10 @@ class Comment extends Component {
   render() {
     const { text, error } = this.state;
     const { comments } = this.props;
+    const { redirect } = this.state;
+    if (redirect) {window.location.reload()};
+    
+    
     return (
       <div>
         <h2 className='mt-5 mb-5'>Leave a comment</h2>
@@ -68,7 +72,7 @@ class Comment extends Component {
         </form>
 
         <div>
-          <h3 className='text-primary'>{comments.length} Comments</h3>
+          <h3 className='text-primary'> Comments</h3>
           <hr />
           {comments &&
             comments.map(comment => (
@@ -104,12 +108,13 @@ class Comment extends Component {
 
                       {(new Date(comment.date)).getHours()}:{(new Date(comment.date)).getMinutes()} on {new Date(comment.date).toDateString()}
                       {isAuthenticate().user &&
-                      isAuthenticate().user._id == comment.author ? (
+                      isAuthenticate().user._id === comment.author ? (
                         <DeleteComment
                           userId={comment.author}
                           postId={this.props.postId}
                           commentId={comment._id}
-                          updateComments={this.props.updateComments}
+                          comment={comment}
+                          //updateComments={this.props.updateComments}
                         />
                       ) : (
                         ''

@@ -1,4 +1,4 @@
-import React, { Component, useImperativeHandle } from 'react';
+import React, { Component} from 'react';
 import { isAuthenticate } from '../auth';
 import DefaultAvatar from '../images/post.jpg';
 import { getPost, likePost, getBase64Photo } from './apiPost';
@@ -79,7 +79,7 @@ class SinglePost extends Component {
     const postId = this.props.match.params.postId;
     const userId = isAuthenticate().user._id
     
-    if (this.state.like == true){
+    if (this.state.like === true){
       this.state.liker.pop();
       this.setState({ like: !this.state.like, 
                       liker: this.state.liker,
@@ -100,6 +100,12 @@ class SinglePost extends Component {
     this.setState({ comments: comments });
   };
 
+  /*updateComfirmed = () => {
+    let answer = window.confirm(
+      'Are you sure you want to delete your comment?'
+    );
+    if (!answer) { window.location.reload()}
+  };*/
 
 /**********************************************AFFICHAGE****************************************************/
   render() {
@@ -109,7 +115,6 @@ class SinglePost extends Component {
       postId,
       date,
       B64photo,
-      loading,
       likes,
       like,
       views,
@@ -117,10 +122,11 @@ class SinglePost extends Component {
       error,
       comments
     } = this.state;
-
     
+    /*setTimeout(() => {redirectToSignin = true}, 7000)
+    console.log(redirectToSignin)*/
     let photoUrl = 'data:image/jpg;base64,' + B64photo;
-
+    
     const posterId = postedBy ? postedBy._id : '';
     const posterName = postedBy ? postedBy.pseudo : 'Unknown';
     if (redirectToSignin) return <Redirect to='/signin' />;
@@ -145,13 +151,13 @@ class SinglePost extends Component {
 
             {!like ? (
               <h3 onClick={this.likeToggle}>
-                <i className='fas fa-thumbs-up text-info'>
+                <i className='fas fa-thumbs-up text-info btn-raised'>
                   {''} {likes} Like
                 </i>
               </h3>
             ) : (
               <h3 onClick={this.likeToggle}>
-                <i className='fas fa-thumbs-down text-danger'>
+                <i className='fas fa-thumbs-down text-danger btn-raised'>
                   {''} {likes} Unlike
                 </i>
               </h3>
@@ -166,11 +172,13 @@ class SinglePost extends Component {
             <Link to={`/`} className='btn btn-primary btn-raised btn-sm mr-5'>
               Back to posts
             </Link>
-            {isAuthenticate().user && isAuthenticate().user._id == posterId ? (
+            {isAuthenticate().user && isAuthenticate().user._id === posterId ? (
               <div className='d-inline-block'>
                 <Link
+                  //onClick={this.updateComfirmed}
                   className='btn btn-raised btn-success mr-5'
-                  to={`/post/edit/${post._id}`}
+                  to= {`/post/edit/${postId}`}
+                  
                 >
                   Update Post
                 </Link>
