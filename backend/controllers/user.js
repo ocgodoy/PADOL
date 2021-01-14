@@ -58,11 +58,19 @@ exports.login = (req, res, next) => {
           const token = jwt.sign(
             { _id: user._id },
             'RANDOM_TOKEN_SECRET',
-            { expiresIn: '24h' },
+            { expiresIn: 5 },
           );
-          res.cookie('t', token, {
+          /*res.cookie('t', token, {
             expire: new Date() + 9999
           });
+          console.log("res", res)
+          */
+          res.cookie('t', token, {
+            expire: new Date( (new Date( Date.now() )).getTime() + parseInt(6000) ) //6sec
+          });
+          console.log("la date là",new Date( (new Date( Date.now() )).getTime() + parseInt(0) ) )
+          console.log("la date de fin",new Date( (new Date( Date.now() )).getTime() + parseInt(180000) ) )
+          
           res.status(200).json({
             user: { _id: user._id, email: user.auth.email, pseudo: user.about.pseudo },
             token: token

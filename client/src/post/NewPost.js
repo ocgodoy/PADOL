@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { isAuthenticate } from '../auth';
 import { Redirect } from 'react-router-dom';
-import DefaultAvatar from '../images/post.jpg';
 import { createPost } from './apiPost';
 
 class NewPost extends Component {
@@ -31,7 +30,6 @@ class NewPost extends Component {
     let fileSize = name === 'photo' ? e.target.files[0].size : 0;
     this.postData.set(name, value);
     this.setState({ [name]: value, error: '', fileSize });
-    console.log(this.setState);
   };
   
   clickSubmit = e => {
@@ -41,7 +39,6 @@ class NewPost extends Component {
       const { user } = this.state;
       const token = isAuthenticate().token;
       this.postData.set("userId", user._id)
-      
       createPost(user._id, token, this.postData).then(res => {
         if (res.error) console.log(res.error);
         else {
@@ -50,13 +47,13 @@ class NewPost extends Component {
       });
     }
   };
-  
+
   isValid = () => {
-    const { title, caption, fileSize, viewsLimit, timeLimit } = this.state;
+    const { title, caption, photo, fileSize, viewsLimit, timeLimit } = this.state;
     if (fileSize > 300000) {
       this.setState({ error: 'File size should be less than 300kb ' });
       return false;
-    } else if (title.length === 0 || caption.length === 0 || viewsLimit.length === 0 || timeLimit.length === 0) {
+    } else if (title.length === 0 || caption === 0 || viewsLimit.length === 0 || timeLimit.length === 0 || photo.size === undefined) {
       this.setState({ error: 'All field is required' });
       return false;
     }
@@ -137,13 +134,12 @@ class NewPost extends Component {
         title,
         caption,
         redirectToProfile,
-        user,
         viewsLimit,
         timeLimit,
         error,
         loading
       } = this.state;
-      if (redirectToProfile) return <Redirect to={`/user/${user._id}`} />;
+      if (redirectToProfile) return <Redirect to={`/`} />;
       return (
         <div className='container'>
         <h2 className='mt-5 mb-5'>Create Post</h2>

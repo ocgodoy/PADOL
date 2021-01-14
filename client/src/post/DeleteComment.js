@@ -1,20 +1,25 @@
 import React, { Component } from 'react';
-import { isAuthenticate, signout } from '../auth';
+import { isAuthenticate} from '../auth';
 import { deleteComment } from './apiPost';
-import { Redirect } from 'react-router-dom';
 
 class DeleteComment extends Component {
+  state = {
+    comment:{},
+    position:0,
+    redirect: false,
+    postId: {}
+  };
+
+
   removeComment = () => {
     const token = isAuthenticate().token;
     const postId = this.props.postId;
     const userId = this.props.userId;
-    const comment = { _id: this.props.commentId };
-    deleteComment(postId, token, userId, comment).then(data => {
-      if (data.err) console.log(data.err);
-      else {
-        this.props.updateComments(data.comments);
-      }
-    });
+    const commentId = { _id: this.props.commentId }
+    const comment = this.props.comment
+    this.setState({postId : postId})
+    deleteComment(postId, token, userId, commentId,comment)
+    .then(setTimeout(() => {this.setState({ redirect: true });}, 100))
   };
 
   deleteComfirmed = () => {
@@ -25,6 +30,9 @@ class DeleteComment extends Component {
   };
 
   render() {
+    const { redirect } = this.state;
+    if (redirect) { window.location.reload()};
+  
     return (
       <div
         onClick={this.deleteComfirmed}

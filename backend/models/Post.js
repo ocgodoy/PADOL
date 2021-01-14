@@ -11,7 +11,7 @@ const postSchema = new mongoose.Schema({
   content: {
     title: { type: String },
     caption: { type: String },
-    url: { type: Buffer, require: true },
+    url: { type: {Buffer:'base64'}, require: true },
     contentType: String
   },
 
@@ -43,6 +43,7 @@ const postSchema = new mongoose.Schema({
 
   comments: [
     {
+      commentId: {type: ObjectId, ref:'Comment'},
       comment: { type: String },
       date: { type: Date, default: Date.now },
       author: { type: ObjectId, ref: 'User' },
