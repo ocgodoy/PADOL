@@ -4,9 +4,6 @@ const uniqueValidator = require('mongoose-unique-validator')
 
 const groupSchema = new mongoose.Schema({
 
-
-
-
   userList: [
       {
         users: [{ type: ObjectId, ref: 'User' }]
@@ -19,6 +16,7 @@ const groupSchema = new mongoose.Schema({
       {
         groupCreator: { type: ObjectId, ref: 'User' },
         groupAdmin: [{ type: ObjectId, ref: 'User' }],
+        groupUser: [{ type: ObjectId, ref: 'User' }]
       }
     ],
   requests:
