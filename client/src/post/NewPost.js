@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import DatePicker from "react-datepicker";
 import { isAuthenticate } from '../auth';
 import { Redirect } from 'react-router-dom';
@@ -15,6 +15,7 @@ class NewPost extends Component {
       caption: '',
       viewsLimit:'',
       timeLimit:'',
+      expiryDate:'',
       photo: '',
       user: {},
       redirectToProfile: false,
@@ -22,6 +23,7 @@ class NewPost extends Component {
       loading: false,
       fileSize: 0
     };
+    this.handleChange = this.handleChange.bind(this);
   }
   
   componentDidMount() {
@@ -34,8 +36,16 @@ class NewPost extends Component {
     let fileSize = name === 'photo' ? e.target.files[0].size : 0;
     this.postData.set(name, value);
     this.setState({ [name]: value, error: '', fileSize });
-    console.log(this.setState);
+    console.log(value);
   };
+
+  handleDateChange = date => {
+    console.log(date);
+    this.postData.set('expiryDate', date);
+    this.setState({
+      expiryDate: date,
+    })
+  }
   
   clickSubmit = e => {
     e.preventDefault();
@@ -55,31 +65,27 @@ class NewPost extends Component {
   };
   
   isValid = () => {
-    const { title, caption, fileSize, viewsLimit, timeLimit } = this.state;
+    const { title, caption, fileSize, viewsLimit, timeLimit, expiryDate } = this.state;
     if (fileSize > 300000) {
       this.setState({ error: 'File size should be less than 300kb ' });
       return false;
-    } else if (title.length === 0 || caption.length === 0 || viewsLimit.length === 0 || timeLimit.length === 0) {
-      this.setState({ error: 'All field is required' });
+    } else if (title.length === 0 || caption.length === 0 || viewsLimit.length === 0 || expiryDate.length === 0) {
+      this.setState({ error: 'All field are required' });
       return false;
     }
     return true;
   };
   
-  newPostForm = (title, caption, viewsLimit, timeLimit) => (
+  newPostForm = (title, caption, viewsLimit, timeLimit, expiryDate) => (
     <form>
     <div className='form-group'>
-    <label className='text-muted'>Profile Photo</label>
+    <label className='text-muted'>Profile Picture</label>
     <input
     onChange={this.handleChange('photo')}
     type='file'
     accept='images/*'
     className='form-control'
     />
-    </div>
-    
-    <div className='form-group'>
-    <label className='text-muted'>Profile Photo</label>
     </div>
     
     <div className='form-group'>
@@ -131,13 +137,21 @@ class NewPost extends Component {
 
     <div className='form-groupe'>
       <label className='text-muted'>
-        Expires on : 
+        Expires on  
       </label>
       <DatePicker
-        selected={this.state.date}
-        onSelect={this.handleSelect} //when day is clicked
-        onChange={this.handleChange} //only when value has changed
+        value={expiryDate}
+        onChange={this.handleDateChange} //only when value has changed
+        selected={expiryDate}
+        //adjustDateOnChange
+        showTimeSelect
+        timeFormat="HH:mm"
+        timeIntervals={15}
+        timeCaption="Time"
+        dateFormat="d MMMM yyyy h:mm aa"
+        timeInputLabel="No date selected"
       />
+
     </div>
     
     <button onClick={this.clickSubmit} className='btn btn-raised btn-primary'>
@@ -154,6 +168,7 @@ class NewPost extends Component {
         user,
         viewsLimit,
         timeLimit,
+        expiryDate,
         error,
         loading
       } = this.state;
@@ -176,7 +191,7 @@ class NewPost extends Component {
             )}
             
             
-            {this.newPostForm(title, caption, viewsLimit, timeLimit)}
+            {this.newPostForm(title, caption, viewsLimit, timeLimit, expiryDate)}
             </div>
             );
           }
