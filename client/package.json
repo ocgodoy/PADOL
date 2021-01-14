@@ -4,12 +4,14 @@
   "private": true,
   "dependencies": {
     "FileReader": "^0.10.2",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "mongoose": "^5.11.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-icons": "^4.1.0",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "^4.0.1"
+    "react-scripts": "^4.0.1",
+    "react-search-autocomplete": "^2.0.4"
   },
   "scripts": {
     "start": "react-scripts start .env",
