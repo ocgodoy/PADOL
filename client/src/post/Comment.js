@@ -4,12 +4,14 @@ import { newComment } from './apiPost';
 import DefaultAvatar from '../images/avatar.png';
 import { Link } from 'react-router-dom';
 import DeleteComment from './DeleteComment';
+//import {photo} from '../user/Profile'
 
 class Comment extends Component {
   state = {
     text: '',
     error: '',
-    redirect : false
+    redirect : false,
+    //photo : 'data:image/jpg;base64,' + photo,
   };
 
   handleChange = e => this.setState({ text: e.target.value });
@@ -46,6 +48,7 @@ class Comment extends Component {
     const { text, error } = this.state;
     const { comments } = this.props;
     const { redirect } = this.state;
+    const { photoUrl } = this.props;
     if (redirect) {window.location.reload()};
     
     
@@ -86,7 +89,7 @@ class Comment extends Component {
                           border: '2px solid black'
                         }}
                         className='mr-3'
-                        src={`${process.env.REACT_APP_API_URL}/user/photo/${comment.author}`}
+                        src={photoUrl}
                         onError={i => (i.target.src = `${DefaultAvatar}`)}
                         alt={comment.author}
                         height='40px'
@@ -102,8 +105,8 @@ class Comment extends Component {
                     <h3> {comment.comment} </h3>
                     <br />
                     <span
-                      className='font-italic mark'
-                      style={{ paddingRight: '120%' }}
+                      className='font-italic mark mr-3'
+                      style={{ height:'auto',weight:'auto'}}
                     >
 
                       {(new Date(comment.date)).getHours()}:{(new Date(comment.date)).getMinutes()} on {new Date(comment.date).toDateString()}

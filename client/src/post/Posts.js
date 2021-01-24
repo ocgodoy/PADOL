@@ -48,19 +48,21 @@ class Posts extends Component {
                 className='card-img-top'
                 src={photoUrl}
                 onError={i => (i.target.src = `${DefaultAvatar}`)}
-                style={{ width: '100%', height: '15vw', objectFit: 'cover' }}
+                style={{ width: '100%', height: '20vw', objectFit: 'cover' }}
               />
               <div className='card-body'>
                 <h5 className='card-title'>{infos.title}</h5>
                 <p className='card-text'>{infos.caption.substring(0, 50)}</p>
                 <br />
-                <p className='font-italic mark'>
-                  {new Date(date).toDateString()}
-                </p>
-                <p className='font-italic mark'>
-                  Expiration {new Date(expiryDate).toDateString()}
-                </p>
-                <p className='font-italic mark'>
+
+               
+               
+               
+               
+               
+               
+
+                <p className='font-italic mark'  style={{ width: '50%', height: '0vw'}}>
                   Vues: {views.viewsNumber}/{views.viewsLimit}
                 </p>
                 <Link
@@ -87,7 +89,7 @@ class Posts extends Component {
             <h2>Welcome to Social Network</h2>
           </div>
         ) : (
-          <h2 className='mt-5 mb-5'>Recent Posts</h2>
+          <h2 className='mt-1 mb-1'>Recent Posts</h2>
         )}
 
         {this.renderPost(posts)}
@@ -97,3 +99,9 @@ class Posts extends Component {
 }
 
 export default Posts
+/* <p className='font-italic mark'>
+   {new Date(date).toDateString()}
+ </p>
+ <p className='font-italic mark'>
+   Expiration {new Date(expiryDate).toDateString()}
+ </p>*/

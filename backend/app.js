@@ -10,6 +10,7 @@ const app = express()
 
 const userRoutes = require('./routes/user')
 const postRoutes = require('./routes/post')
+const friendRoutes = require('./routes/friend')
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -33,6 +34,7 @@ app.use(bodyParser.json())
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/user', userRoutes)
 app.use('/post', postRoutes)
+app.use('/friend', friendRoutes)
 
 app.listen(port, () => { console.log('Server listening on port ' + port) })
 module.exports = app

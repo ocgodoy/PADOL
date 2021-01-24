@@ -89,7 +89,6 @@ Posts.findOneAndUpdate(
 
 
 exports.deletePost = (req, res, next) => {
-  console.log("yeaaaaaaaaaaaaaaaaaaaaaaah")
   Posts.deleteOne({ _id: ObjectId(req.body.postId) })
   .then( () => { res.status(200).json({ message: 'post successfully deleted !' }) } )
   .catch( (error) => {res.status(400).json({ error: error }) } )

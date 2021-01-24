@@ -24,30 +24,34 @@ export const findPeople = userId => {
 }
 
 export const removeUser = (userId, token) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
-    method: 'DELETE',
+  return fetch(`${process.env.REACT_APP_API_URL}/user/delete/${userId}`, {
+    method: 'PUT',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
-    }
+    },
+    body: JSON.stringify({userId})
   })
     .then(res => res.json())
     .catch(err => console.log(err))
 }
 
 export const update = (userId, token, user) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
-    method: 'PUT',
+  return fetch(`${process.env.REACT_APP_API_URL}/user/user/edit/${userId}`, {
+    method: 'POST',
     headers: {
       Accept: 'application/json',
-      Authorization: `Bearer ${token}`
+      //'Content-Type': 'application/json',
+      //Authorization: `Bearer ${token}`
     },
+    mode: 'cors',
     body: user
   })
     .then(res => res.json())
-    .catch(err => console.log(err))
+    //.catch(err => console.log(err));
 }
+
 
 export const updateLocalStorage = (user, next) => {
   if (typeof window !== 'undefined') {
