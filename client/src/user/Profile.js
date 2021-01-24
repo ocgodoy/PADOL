@@ -17,6 +17,7 @@ class Profile extends Component {
       location:{},
       redirectToSignin: false,
       following: false,
+      userId:undefined,
       error: '',
       posts: [],
       photo: {},
@@ -82,6 +83,7 @@ class Profile extends Component {
 /*  componentDidMount() {
     console.log('user id from route params: ', this.props.match.params.userId);
     const userId = this.props.match.params.userId;
+    this.setState({userId: userId})
     this.init(userId);
   }
 

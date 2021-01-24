@@ -38,8 +38,7 @@ class Friends extends Component {
       this.setState({test: requests},
         requests.forEach((request) => {
           //pseudosFriends.push("test");
-          getUser(request.userId, isAuthenticate().token)
-          .then(user => {this.setState({pseudosRequests:this.state.pseudosRequests.concat(user.about.pseudo)})})
+          getUser(request.userId, isAuthenticate().token).then(user => {this.setState({pseudosRequests:this.state.pseudosRequests.concat(user.about.pseudo)})})
         }),
 
       console.log("pseudosFriends vaut" + pseudosFriends),
