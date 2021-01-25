@@ -2,12 +2,13 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const ObjectId = require('mongodb').ObjectId
-
+const formidable = require('formidable')
 const db = mongoose.connection
 const Users = db.collection('Users')
 const User = require('../models/User')
 const Friends = db.collection('Friends')
 const Friend = require('../models/Friend')
+const fs = require('fs')
 
 exports.loadUserById = (req, res, next, id) => {
   Users.findOne({ _id: ObjectId(id) }).then(
@@ -55,7 +56,6 @@ exports.login = (req, res, next) => {
       }
       bcrypt.compare(req.body.password, user.auth.password)
         .then(valid => {
-          console.log("test reussi \n")
           if (!valid) {
             return res.status(401).json({ error: 'Incorrect password' })
           }
@@ -72,8 +72,8 @@ exports.login = (req, res, next) => {
           res.cookie('t', token, {
             expire: new Date( (new Date( Date.now() )).getTime() + parseInt(6000) ) //6sec
           });
-          console.log("la date là",new Date( (new Date( Date.now() )).getTime() + parseInt(0) ) )
-          console.log("la date de fin",new Date( (new Date( Date.now() )).getTime() + parseInt(180000) ) )
+          //console.log("la date là",new Date( (new Date( Date.now() )).getTime() + parseInt(0) ) )
+          //console.log("la date de fin",new Date( (new Date( Date.now() )).getTime() + parseInt(180000) ) )
           
           res.status(200).json({
             user: { _id: user._id, email: user.auth.email, pseudo: user.about.pseudo },
@@ -100,31 +100,64 @@ exports.getUser = (req, res, next) => {
 }
 
 exports.updateUser = (req, res, next) => {
-  const user = req.profile
-  const updatedUser = req.body
-  if (updatedUser.password !== undefined && !bcrypt.compare(updatedUser.password, user.password)) {
-    bcrypt.hash(updatedUser.password, 10)
+  const form = new formidable.IncomingForm()
+  form.keepExtensions = true
+  form.parse(req, (err, fields, files) => {
+    const userTest = { about: {photo:{}}, auth: {}}
+    userTest.about.name = fields.name
+    userTest.auth.email = fields.email
+    userTest._id = ObjectId(fields.userId)
+    //userTest.auth.password = fields.password
+    console.log("userTest", userTest);
+    if (err) {
+      return res.status(400).json({
+        err: 'Image could not be uploaded'
+      })
+    }
+ 
+ /* if (userTest.auth.password !== undefined ) {
+    bcrypt.hash(userTest.auth.password, 10)
       .then(hash => {
-        delete updatedUser.auth.password
-        updatedUser.auth.password = hash
+        delete userTest.auth.password
+        userTest.auth.password = hash
       }).catch(error => res.status(500).json({ error }))
-  }
-  Users.updateOne({ _id: ObjectId(user._id) }, { $set: updatedUser })
-    .then(updatedUser => {
-      res.status(200).json(updatedUser)
-    })
-    .catch(error => res.status(400).json({ error }))
+  }*/
+  if (files.photo) {
+    //postTest.content.url = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    userTest.about.photo.data = fs.readFileSync(files.photo.path)
+    userTest.about.photo.contentType = files.photo.type
+  } 
+  Users.updateOne(
+    { _id: ObjectId(userTest._id) },
+    { $set: 
+      {"about.psuedo": userTest.about.name,
+       "auth.email": userTest.auth.email, 
+      // "auth.password": userTest.auth.password, 
+       "about.photo.data": userTest.about.photo.data, 
+       "about.photo.contentType": userTest.about.photo.contentType
+       },
+    }  )
+    .then( () => {res.status(201).json({message: 'post updated successfully!'}) } )
+    //.catch( (error) => {res.status(400).json({ error: error }) } )
+
+   
+    /*const post = new Post({ ...postTest })
+    Posts.insertOne(post)
+      .then(() => {
+        res.status(201).json({ message: 'Post saved successfully! (CreatPost)' })
+      })
+      .catch(error => { res.status(400).json({ error: error }) })*/
+  })
 }
 
+
 exports.deleteUser = (req, res, next) => {
-  const user = req.profile
-  Users.deleteOne({ _id: ObjectId(user._id) })
+  Users.deleteOne({ _id: ObjectId(req.body.userId) })
     .then(() => res.status(200).json({ message: 'User deleted !' }))
     .catch(error => res.status(400).json({ error }))
 }
 
 exports.allUsers = (req, res) => {
-  console.log('Get All Users demandé \n')
   const result = []
   let user = Users.find().toArray().then(user => res.json(user))
   // Users.find().toArray().then(user => {console.log(user),user.forEach((item, i) => {

@@ -11,8 +11,8 @@ const userSchema = new mongoose.Schema({
     lastName: { type: String, trim: true, require: true },
     pseudo: { type: String, trim: true, require: true },
     photo: {
-      data: { type: Buffer },
-      contentType: { type: String }
+      data: { type: {Buffer:'base64'} },
+      contentType: String
     }
   },
 

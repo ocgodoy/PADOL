@@ -30,6 +30,7 @@ class NewPost extends Component {
     let fileSize = name === 'photo' ? e.target.files[0].size : 0;
     this.postData.set(name, value);
     this.setState({ [name]: value, error: '', fileSize });
+    console.log("affichage state",this.state)
   };
   
   clickSubmit = e => {
@@ -72,9 +73,6 @@ class NewPost extends Component {
     />
     </div>
     
-    <div className='form-group'>
-    <label className='text-muted'>Profile Photo</label>
-    </div>
     
     <div className='form-group'>
     <label className='text-muted'>Title</label>

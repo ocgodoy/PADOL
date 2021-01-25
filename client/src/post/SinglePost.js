@@ -139,12 +139,12 @@ class SinglePost extends Component {
           </div>
         ) : (
           <>
-            <h2 className='mt-5 mb-5 display-2'>{post.title}</h2>
+            <h2 className='mt-5 mb-5 display-2' >{post.title}</h2>
             <img
               className='card-img-top'
               src = {photoUrl}
               onError={i => (i.target.src = `${DefaultAvatar}`)}
-              style={{ width: '30%', height: '15vw', objectFit: 'cover' }}
+              style={{ width: 'auto', height: '25vw', objectFit: 'cover' }}
             />
             <br />
             <br />
@@ -190,6 +190,7 @@ class SinglePost extends Component {
           </>
         )}
         <Comment
+          photoUrl = {photoUrl}
           postId={postId}
           comments={comments}
           updateComments={this.updateComments}

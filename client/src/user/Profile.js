@@ -19,32 +19,55 @@ class Profile extends Component {
       following: false,
       userId:undefined,
       error: '',
-      posts: []
+      posts: [],
+      photo: {},
+      userId : {},
+      myUserId :{},
+      firstName: {},
+      lastname: {},
+      pseudo: {},
+      date :null,
+      friendRequests :{},
+      friendPending : {},
+      friendGroups : {},
+      email: {},
+      password: {}, 
     };
+  }
+
+  componentDidMount() {
+    if (!isAuthenticate()) return this.setState({ redirectToSignin: true });
+    const token = isAuthenticate().token;
+    const myUserId = isAuthenticate().user._id;
+    const userId = this.props.match.params.userId;
+    console.log("this.state", myUserId, userId)
+    getUser(userId, token).then(data => {
+      if (data.error) {
+        console.log(data.error);
+        this.setState({error: data.error})
+      }
+      else{
+          const photo = data.about.photo ? data.about.photo.data : DefaultAvatar 
+          this.setState({
+            myUserId : myUserId,
+            userId: userId,
+            firstName: data.about.firstName,
+            lastname: data.about.lastanme,
+            pseudo: data.about.pseudo,
+            date : data.location.date,
+            friendRequests : data.friends.friendRequests,
+            friendPending : data.friends.friendPending,
+            friendGroups : data.friends.friendGroups,
+            email: data.auth.email,
+            password: data.auth.password,
+            photo : photo
+          });
+        }
+    });
   }
 
 
 
-
-
-  // initialize user's data
-  init = userId => {
-    const token = isAuthenticate().token;
-    getUser(userId, token) // read method must return something
-      .then(data => {
-        if (data.error) {
-          console.log('ERROR');
-          this.setState({ redirectToSignin: true });
-        } else {
-          console.log(data);
-
-          this.setState({ user: data.about });
-          this.setState({ auth: data.auth });
-          this.setState({ location: data.location });
-          //this.loadPosts(data._id);
-        }
-      });
-  };
 
   loadPosts = userId => {
     const token = isAuthenticate().token;
@@ -57,7 +80,7 @@ class Profile extends Component {
     });
   };
 
-  componentDidMount() {
+/*  componentDidMount() {
     console.log('user id from route params: ', this.props.match.params.userId);
     const userId = this.props.match.params.userId;
     this.setState({userId: userId})
@@ -68,19 +91,28 @@ class Profile extends Component {
   componentWillReceiveProps(props) {
     const userId = props.match.params.userId;
     this.init(userId);
-  }
+  }*/
 
   render() {
-    const { redirectToSignin, user, posts, auth, location, userId} = this.state;
+    const { 
+      redirectToSignin,
+      user,
+      posts,
+      auth, 
+      location, 
+      pseudo, 
+      email, 
+      date, 
+      photo, 
+      myUserId, 
+      userId,
+    } = this.state;
+    console.log("this.state", this.state)
+    console.log("this.state", myUserId, userId)
+    
     if (redirectToSignin) return <Redirect to='/signin' />;
-
-    const photoUrl = user._id
-      ? `${process.env.REACT_APP_API_URL}/user/photo/${
-          user._id
-        }?${new Date().getTime()}`
-      : DefaultAvatar;
-
     return (
+      
       <div className='container'>
         <h2 className='mt-5 mb-5'>Profile</h2>
         <div className='row'>
@@ -88,7 +120,7 @@ class Profile extends Component {
             <img
               style={{ height: '200px', width: 'auto' }}
               className='img-thumbnail'
-              src={photoUrl}
+              src={'data:image/jpg;base64,' + photo}
               onError={i => (i.target.src = `${DefaultAvatar}`)}
               alt={user.name}
             />
@@ -96,25 +128,23 @@ class Profile extends Component {
 
           <div className='col-md-6'>
             <div className='lead mt-2'>
-              <p>Hello, {user.pseudo}</p>
-              <p>Email: {auth.email}</p>
-              <p>{`Joined ${new Date(location.date).toDateString()}`}</p>
+              <p>{`Hello ${pseudo}`}</p>
+              <p>{`email: ${email}`}</p>
+              <p>{`Joined ${new Date(date).toDateString()}`}</p>
             </div>
 
-            {isAuthenticate().user && isAuthenticate().user._id === user._id ? (
+            {myUserId === userId ? (
               <div className='d-line-block'>
-                <Link
-                  className='btn btn-raised btn-success mr-5'
-                  to={`/user/edit/${user._id}`}
-                >
-                  Edit Profile
-                </Link>
+                <Link 
+                className='btn btn-raised btn-success mr-5'
+                to={`/user/edit/${userId}`} userId={userId} >
+                 Edit Profile
+                </Link> 
 
-                <DeleteProfile userId={user._id} />
+                <DeleteProfile userId={userId} />
               </div>
             ) : (
               <FollowProfileButton userId={userId}
-
 
               />
             )}
