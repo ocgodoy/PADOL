@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { getAllUser } from './apiUser';
 import DefaultAvatar from '../images/avatar.png';
 import { Link } from 'react-router-dom';
+import { isAuthenticate } from '../auth';
+import {Redirect } from 'react-router-dom';
 
 class Users extends Component {
   constructor() {
@@ -12,6 +14,7 @@ class Users extends Component {
   }
 
   componentDidMount() {
+    if (!isAuthenticate()) return this.setState({ redirectToSignin: true });
     getAllUser().then(data => {
       if (data.error) {
         console.log(data.error);
@@ -48,6 +51,7 @@ class Users extends Component {
   );
 
   render() {
+    if (this.state.redirectToSignin) return <Redirect to='/signin' />;
     const { users } = this.state;
     return (
       <div className='container'>

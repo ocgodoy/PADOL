@@ -48,7 +48,8 @@ exports.createPost = (req, res, next) => {
       postTest.content.url = fs.readFileSync(files.photo.path)
       postTest.content.contentType = files.photo.type
     }
-    const post = new Post({ ...postTest })
+    const post = new Post({ ...postTest})
+    console.log("ceci est mon post", post)
     Posts.insertOne(post)
       .then(() => {
         res.status(201).json({ message: 'Post saved successfully! (CreatPost)' })
