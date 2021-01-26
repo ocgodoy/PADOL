@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { isAuthenticate } from '../auth';
 import { Redirect } from 'react-router-dom';
-import DefaultAvatar from '../images/post.jpg';
+import DefaultAvatar from '../images/avatar.png';
 import { getAllRequests } from './apiFriend'
 import { addFriend } from './apiFriend'
 import { getAllFriends } from './apiFriend'
+import { getUser } from '../user/apiUser'
 import { Link } from 'react-router-dom';
 
 import Test from '../images/padol_logo.png';
@@ -22,26 +23,42 @@ class Friends extends Component {
                 {userId: "Rami", status:false, date: new Date(Date.now())}
                       ],
       test: [],
+      pseudosFriends:[],
+      pseudosRequests:[],
       friends: [],
+      grouptest:[{name:"Premier groupe",users: ["id1","id2"]}, {name:"Deuxieme groupe", users: ["id3", "id4"]}],
       error: ''
     };
   }
 
 
   componentDidMount() {
+    var pseudosFriends = [];
     this.setState({ user: isAuthenticate().user });
     getAllRequests(isAuthenticate().user._id).then(requests => {
-      this.setState({test: requests}, console.log("requests vaut " + JSON.stringify(requests)));
+      this.setState({test: requests},
+        requests.forEach((request) => {
+          //pseudosFriends.push("test");
+          getUser(request.userId, isAuthenticate().token).then(user => {this.setState({pseudosRequests:this.state.pseudosRequests.concat(user.about.pseudo)})})
+        }),
+
+      console.log("pseudosFriends vaut" + pseudosFriends),
+      console.log("requests vaut " + JSON.stringify(requests)));
       })
     getAllFriends(isAuthenticate().user._id).then(friends => {
-      this.setState({friends: friends}, console.log("friends vaut " + JSON.stringify(friends)));
+      this.setState({friends: friends},
+        friends.forEach((friend) => {
+          //pseudosFriends.push("test");
+          getUser(friend.userId, isAuthenticate().token).then(user => {this.setState({pseudosFriends:this.state.pseudosFriends.concat(user.about.pseudo)})})
+        }),
+        console.log("friends vaut " + JSON.stringify(friends)));
       })
   }
 
   renderFriends(friends){
     return(
       <div className='row'>
-        {friends.map(friend => {
+        {friends.map((friend,i) => {
           return (
             <div className='card col-md-3 mr-5 mb-5' key={friend.userId}>
               <img
@@ -52,7 +69,7 @@ class Friends extends Component {
                 alt={friend.userId}
               />
               <div className='card-body'>
-                <h5 className='card-title'>{friend.userId}</h5>
+                <h5 className='card-title'>{this.state.pseudosFriends[i]}</h5>
                 <Link
                   to={`/user/${friend.userId}`}
                   className='btn btn-raised btn-primary btn-sm'
@@ -74,7 +91,7 @@ class Friends extends Component {
     console.log(JSON.stringify(requests))
     return(
       <div className='row'>
-        {requests.map(request => {
+        {requests.map((request,i) => {
           return (
             request.status === false ? (
               <div className='card col-md-3 mr-5 mb-5' key={request.userId}>
@@ -86,7 +103,7 @@ class Friends extends Component {
                 alt={request.userId}
               />
                 <div className='card-body'>
-                  <h5 className='card-title'>{request.userId}</h5>
+                  <h5 className='card-title'>{this.state.pseudosRequests[i]}</h5>
                   <Link
                     to={`/user/${request.userId}`}
                     className='btn btn-raised btn-primary btn-sm'
@@ -102,6 +119,29 @@ class Friends extends Component {
         )}
       </div>
     )
+  }
+
+
+
+  renderGroups(groups){
+    return(
+      <div className='row'>
+        {groups.map((group,i) => {
+          return (
+            <div className='card col-md-3 mr-5 mb-5' key={group.name}>
+              <div className='card-body'>
+                <h5 className='card-title'>{group.name}</h5>
+                  {group.users.map((user)=> {
+                    return (<p> {user} </p>)
+                  })}
+              </div>
+            </div>
+          )
+        }
+
+        )}
+      </div>
+    )
 
   }
 
@@ -111,6 +151,7 @@ class Friends extends Component {
       user,
       friends,
       requests,
+      grouptest,
       test,
       error
     } = this.state;
@@ -134,6 +175,8 @@ class Friends extends Component {
         )}
 
         {this.renderRequests(test)}
+        <h2 className='mt-5 mb-5'>Groups</h2>
+        {this.renderGroups(grouptest)}
       </div>
     )
   }

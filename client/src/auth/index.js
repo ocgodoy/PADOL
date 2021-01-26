@@ -1,3 +1,4 @@
+import { Redirect } from 'react-router-dom';
 export const signup = user => {
   return fetch(`${process.env.REACT_APP_API_URL}/user/signup`, {
     method: 'POST',
@@ -32,16 +33,22 @@ export const authenticate = (jwt, next) => {
 export const isAuthenticate = () => {
   //localStorage.clear();
   let jwt = localStorage.jwt
+  /*let expirationTime = false
+  setTimeout( () => {expirationTime = true}, 10000)
+  console.log(expirationTime);
+  if ( expirationTime) return false//10sec*/
   if (jwt) return JSON.parse(jwt)
-  return false
+  return false 
 }
 
 export const signout = next => {
   if (typeof window !== 'undefined') localStorage.removeItem('jwt')
+  document.location.href= `${process.env.REACT_APP_LOCAL_URL}/signin`
   next()
   return fetch(`${process.env.REACT_APP_API_URL}/signout`, { method: 'POST' })
     .then(res => res.json())
     .catch(err => console.log(err))
+  
 }
 
 // check path
