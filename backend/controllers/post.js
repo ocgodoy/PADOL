@@ -36,7 +36,13 @@ exports.createPost = (req, res, next) => {
     postTest.postedBy.pseudo = req.profile.about.pseudo
     // post_test.postedBy = ObjectId("5fbdcc5d42682316503994eb")
     postTest.views.viewsLimit = fields.viewsLimit
+<<<<<<< HEAD
     postTest.date.expiryDate = new Date((new Date(Date.now())).getTime() + parseInt(fields.timeLimit))
+=======
+    postTest.date.expiryDate = new Date(fields.expiryDate);
+    //postTest.date.expiryDate = new Date((new Date(Date.now())).getTime() + parseInt(fields.timeLimit))
+    console.log(JSON.stringify(postTest))
+>>>>>>> feat-options
     if (err) {
       return res.status(400).json({
         err: 'Image could not be uploaded'

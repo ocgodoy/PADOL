@@ -1,7 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
+import DatePicker from "react-datepicker";
 import { isAuthenticate } from '../auth';
 import { Redirect } from 'react-router-dom';
 import { createPost } from './apiPost';
+
+import "react-datepicker/dist/react-datepicker.css";
 
 class NewPost extends Component {
   constructor() {
@@ -11,6 +14,7 @@ class NewPost extends Component {
       caption: '',
       viewsLimit:'',
       timeLimit:'',
+      expiryDate:'',
       photo: '',
       user: {},
       redirectToProfile: false,
@@ -18,6 +22,7 @@ class NewPost extends Component {
       loading: false,
       fileSize: 0
     };
+    this.handleChange = this.handleChange.bind(this);
   }
   
   componentDidMount() {
@@ -31,7 +36,16 @@ class NewPost extends Component {
     this.postData.set(name, value);
     this.setState({ [name]: value, error: '', fileSize });
     console.log("affichage state",this.state)
+    console.log(value);
   };
+
+  handleDateChange = date => {
+    console.log(date);
+    this.postData.set('expiryDate', date);
+    this.setState({
+      expiryDate: date,
+    })
+  }
   
   clickSubmit = e => {
     e.preventDefault();
@@ -61,10 +75,10 @@ class NewPost extends Component {
     return true;
   };
   
-  newPostForm = (title, caption, viewsLimit, timeLimit) => (
+  newPostForm = (title, caption, viewsLimit, timeLimit, expiryDate) => (
     <form>
     <div className='form-group'>
-    <label className='text-muted'>Profile Photo</label>
+    <label className='text-muted'>Profile Picture</label>
     <input
     onChange={this.handleChange('photo')}
     type='file'
@@ -120,6 +134,25 @@ class NewPost extends Component {
     </select>
     </div>
     </div>
+
+    <div className='form-groupe'>
+      <label className='text-muted'>
+        Expires on  
+      </label>
+      <DatePicker
+        value={expiryDate}
+        onChange={this.handleDateChange} //only when value has changed
+        selected={expiryDate}
+        //adjustDateOnChange
+        showTimeSelect
+        timeFormat="HH:mm"
+        timeIntervals={15}
+        timeCaption="Time"
+        dateFormat="d MMMM yyyy h:mm aa"
+        timeInputLabel="No date selected"
+      />
+
+    </div>
     
     <button onClick={this.clickSubmit} className='btn btn-raised btn-primary'>
     Create
@@ -134,6 +167,7 @@ class NewPost extends Component {
         redirectToProfile,
         viewsLimit,
         timeLimit,
+        expiryDate,
         error,
         loading
       } = this.state;
@@ -156,7 +190,7 @@ class NewPost extends Component {
             )}
             
             
-            {this.newPostForm(title, caption, viewsLimit, timeLimit)}
+            {this.newPostForm(title, caption, viewsLimit, timeLimit, expiryDate)}
             </div>
             );
           }
