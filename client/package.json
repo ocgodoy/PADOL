@@ -4,12 +4,8 @@
   "private": true,
   "dependencies": {
     "FileReader": "^0.10.2",
-<<<<<<< HEAD
-    "axios": "^0.21.1",
-=======
     "axios": "^0.21.0",
     "date-fns": "^2.16.1",
->>>>>>> feat-options
     "mongoose": "^5.11.5",
     "react": "^16.8.6",
     "react-datepicker": "^3.4.0",
