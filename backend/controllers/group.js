@@ -53,3 +53,32 @@ exports.addGoupeUser = (req, res, next) => { // Accepter ou refuser demande d'aj
     ).catch(error => {res.status(401).json({error: error})})
   res.status(200)
 }
+
+exports.deleteFromGroupRequestList = (req, res, next) => { // Accepter ou refuser demande de groupe
+  console.log("Delete from request list appelé \n")
+  const accepter = req.groups.userId // Celui qui accepte ou refuse l'invitation de group
+  const inviter = req.body.userId // Celui qui a envoyé l'invitation
+
+    Groups.findOneAndUpdate( // Supression de la demande de group
+      {userId: ObjectId(inviter)},
+      {$pull: { requests: { userId: ObjectId(accepter)} } }
+    ).catch(error => {res.status(401).json({error: error})})
+    Groups.findOneAndUpdate( // Supressionde la demande de group
+      {userId: ObjectId(accepter)},
+      {$pull: { requests: { userId: ObjectId(inviter)} } }
+    ).catch(error => {res.status(401).json({error: error})})
+
+  res.status(200)
+}
+
+exports.getAllRequests = (req, res, next) => { // Avoir les demandes d'amis
+  const groupRequests = req.groups.requests
+  console.log("Friends request vaut " + JSON.stringify(groupRequests))
+  res.status(200).json(groupRequests)
+}
+
+
+exports.getAllGroups = (req, res, next) => { // Avoir tous les groupes d'amis
+  const groups = req.groups.groups
+  res.json(groups)
+}
