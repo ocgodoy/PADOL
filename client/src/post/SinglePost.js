@@ -73,7 +73,6 @@ class SinglePost extends Component {
     const userId = isAuthenticate().user._id;
     if(data.likes.likers.includes(userId)){return true}
   };
-
   likeToggle = () => {
     const token = isAuthenticate().token;
     const postId = this.props.match.params.postId;
@@ -133,6 +132,7 @@ class SinglePost extends Component {
     if (error) return <Redirect to='/post/expired' />;
     return (
       <div className='container'>
+        <center>
         {!post.title ? (
           <div className='jumbotron text-center'>
             <h2>Loading...</h2>
@@ -177,9 +177,7 @@ class SinglePost extends Component {
                 <Link
                   //onClick={this.updateComfirmed}
                   className='btn btn-raised btn-success mr-5'
-                  to= {`/post/edit/${postId}`}
-                  
-                >
+                  to= {`/post/edit/${postId}`}>
                   Update Post
                 </Link>
                 <DeletePost postId={postId} userId={isAuthenticate().user._id}/>
@@ -196,6 +194,7 @@ class SinglePost extends Component {
           updateComments={this.updateComments}
           comments={comments}
         />
+        </center>
       </div>
     );
   }

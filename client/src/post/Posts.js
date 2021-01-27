@@ -40,7 +40,8 @@ class Posts extends Component {
 
 
           return (
-            <div className='card col-md-3 mr-5 mb-5' key={post._id}>
+            <div className='card col-md-3 mr-5 mb-5 backPosts'  key={post._id}>
+              <div class="categoryWrapper">
               <div>
                 <Link to={`/user/${posterId}`}>{posterName} </Link>
               </div>
@@ -50,27 +51,28 @@ class Posts extends Component {
                 onError={i => (i.target.src = `${DefaultAvatar}`)}
                 style={{ width: '100%', height: '20vw', objectFit: 'cover' }}
               />
-              <div className='card-body'>
-                <h5 className='card-title'>{infos.title}</h5>
-                <p className='card-text'>{infos.caption.substring(0, 50)}</p>
-                <br />
 
-               
-               
-               
-               
-               
-               
+              <div>
+              <button>
+                <span>
+                  <span>
+                    
+                    <Link   to={`/post/${post._id}`} className='btn'> Read More</Link>
+                     
+                  </span>
+                </span>
+              </button>
 
-                <p className='font-italic mark'  style={{ width: '50%', height: '0vw'}}>
-                  Vues: {views.viewsNumber}/{views.viewsLimit}
-                </p>
-                <Link
-                  to={`/post/${post._id}`}
-                  className='btn btn-primary btn-raised btn-sm'
-                >
-                  Read more
-                </Link>
+                <p><center>
+                <h2>{infos.title}</h2>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <h5>{infos.caption.substring(0, 50)}</h5>
+                <h5 className='font-italic'> Vues: {views.viewsNumber}/{views.viewsLimit}</h5>
+                </center></p>
+                </div>
               </div>
             </div>
           )
@@ -83,7 +85,7 @@ class Posts extends Component {
     if (this.state.redirectToSignin) return <Redirect to='/signin' />;
     const { posts } = this.state
     return (
-      <div className='container'>
+      <div className="container-fluid">
         {!posts.length || posts.length === 'undefined' ? (
           <div className='jumbotron text-center'>
             <h2>Welcome to Social Network</h2>

@@ -157,6 +157,7 @@ class Friends extends Component {
     } = this.state;
     return (
       <div className='container'>
+        <center>
         {!friends.length || friends.length === 'undefined' ? (
           <div className='jumbotron text-center'>
             <h2>No friends</h2>
@@ -175,8 +176,11 @@ class Friends extends Component {
         )}
 
         {this.renderRequests(test)}
-        <h2 className='mt-5 mb-5'>Groups</h2>
+
+        </center>
+         <h2 className='mt-5 mb-5'>Groups</h2>
         {this.renderGroups(grouptest)}
+
       </div>
     )
   }

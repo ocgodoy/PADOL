@@ -1,5 +1,5 @@
-export const createPost = (userId, token, post) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/post/${userId}`, {
+export async function createPost(userId, token, post) {
+  return await fetch(`${process.env.REACT_APP_API_URL}/post/${userId}`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -10,7 +10,7 @@ export const createPost = (userId, token, post) => {
   })
     .then(res => res.json())
     // .catch(err => console.log(err));
-}
+};
 
 
 export const editPost = (postId, token, title, caption) => {
