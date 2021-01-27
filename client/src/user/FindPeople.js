@@ -76,6 +76,7 @@ class Users extends Component {
     if (redirect) return <Redirect to={`/user/${id_redirect}`} />;
     return (
       <div>
+        <center>
           <div className='jumbotron'>
             <h2 className='mt-5 mb-5'>Find your friends</h2>
           </div>
@@ -99,6 +100,7 @@ class Users extends Component {
             </div>
 
       </div>
+      </center>
       </div>
     );
   }

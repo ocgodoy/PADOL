@@ -39,14 +39,16 @@ class NewPost extends Component {
       this.setState({ loading: true });
       const { user } = this.state;
       const token = isAuthenticate().token;
-      this.postData.set("userId", user._id)
+      this.postData.set("userId", user._id);
       createPost(user._id, token, this.postData).then(res => {
         if (res.error) console.log(res.error);
         else {
-          this.setState({ redirectToProfile: true });
+          setTimeout(() => {
+            this.setState({ redirectToProfile: true });
+          }, 100)
         }
       });
-    }
+    };
   };
 
   isValid = () => {
@@ -63,16 +65,20 @@ class NewPost extends Component {
   
   newPostForm = (title, caption, viewsLimit, timeLimit) => (
     <form>
+    <left>
     <div className='form-group'>
     <label className='text-muted'>Profile Photo</label>
+    
     <input
+    
     onChange={this.handleChange('photo')}
     type='file'
     accept='images/*'
     className='form-control'
     />
-    </div>
     
+    </div>
+    </left>
     
     <div className='form-group'>
     <label className='text-muted'>Title</label>

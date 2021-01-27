@@ -1,0 +1,213 @@
+
+.backPosts{
+    background-color : rgba(255, 255, 255, 0.123);
+    height: auto;
+}
+
+.backColorGrey{
+    background-color: rgba(143, 145, 150, 0.281);
+    height: 5vw;
+    font-size: 5vw; 
+}
+
+.backColorYellow{
+    background-color: rgba(230, 145, 18, 0.342);
+}
+
+
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #fdfdfd7c;
+    background-image: url(../src/images/lockGIF.gif);
+  }
+
+  .centerBox{
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    height: auto;
+  }
+  
+  .categoryWrapper{
+    height: auto;
+    width: auto;
+    background: url("http://ohlookawebsite.com/bathroomtestfull.jpg") no-repeat center center;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .categoryWrapper:after{
+    position: absolute;
+    top:0;
+    left: 0;
+    right:0;
+    bottom: 0;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a29ca9+0,95909b+99 */
+  background: #ffffff; /* Old browsers */
+  background: -moz-linear-gradient(-45deg, #a29ca9 0%, #95909b 99%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(-45deg, hsla(46, 89%, 28%, 0.288) 0%,#95909b 99%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg, #199952a2 0%,#95909b 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a29ca9', endColorstr='#95909b',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    content: '';
+    opacity: 0;
+      -webkit-transition: opacity 0.9s ease 0s; 
+  }
+  
+  .categoryWrapper:hover:after{
+    opacity: 0.4;
+  }
+  
+  .categoryWrapper h1{
+    color:rgb(0, 0, 0);
+    font-size: 50px;
+    letter-spacing: 2px;
+    -webkit-transition: all 0.15s ease 0s; 
+    position: relative;
+    z-index: 10;
+  }
+  
+  .categoryWrapper:hover h1{
+    transform: translateY(-10px);
+  }
+  
+  .categoryWrapper button{
+    position: absolute;
+    transform: translatey(60px);
+    -webkit-appearance: none;
+    border: none;
+    background: none;
+    color:rgb(0, 0, 0);
+    width: 250px;
+    height:50px;
+    font-size: 20px;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    z-index: 10;
+  }
+  
+  .categoryWrapper button span{
+    display: block;
+    position: relative;
+    line-height: 50px;
+    height: 50px;
+    cursor: pointer;
+  }
+  
+  .categoryWrapper button > span:after{
+    content:'';
+    position: absolute;
+    top:0;
+    left: 50%;
+    width: 20px;
+    height: 0;
+    
+    border: 1px solid rgb(0, 0, 0);
+    border-left: none;
+    border-bottom: none;
+    
+        transition: height 0.15s ease-out, width 0.15s ease-out 0.15s;
+  }
+  
+  .categoryWrapper:hover button > span:after{
+    width: calc(50% - 1px);
+    height: calc(100% - 2px);
+    transition: width 0.15s ease-out, height 0.15s ease-out 0.15s;
+  }
+  
+  .categoryWrapper button > span:before{
+    content:'';
+    position: absolute;
+    top:0;
+    right: 50%;
+    width: 20px;
+    height: 0;
+    
+    border: 1px solid rgb(0, 0, 0);
+    border-right: none;
+    border-bottom: none;
+    
+        transition: height 0.15s ease-out, width 0.15s ease-out 0.15s;
+  }
+  
+  .categoryWrapper:hover button > span:before{
+    width: calc(50% - 1px);
+    height: calc(100% - 2px);
+    transition: width 0.15s ease-out, height 0.15s ease-out 0.15s;
+  }
+  
+  .categoryWrapper button > span > span:before{
+    content:'';
+    position: absolute;
+    bottom:0;
+    right: 0%;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    
+  }
+  
+  .categoryWrapper:hover button > span > span:before{
+    opacity: 1;
+    border-bottom: 1px solid rgb(0, 0, 0);
+    width: calc(50%);
+    height: 1px;
+    transition: opacity 0s ease-out 0.29s, width 0.15s ease-out 0.3s;
+  }
+  
+  .categoryWrapper button > span > span:after{
+    content:'';
+    position: absolute;
+    bottom:0;
+    left: 0%;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    
+  }
+  
+  .categoryWrapper:hover button > span > span:after{
+    opacity: 1;
+    border-bottom: 1px solid rgb(0, 0, 0);
+    width: calc(50%);
+    height: 1px;
+    transition: opacity 0s ease-out 0.29s, width 0.15s ease-out 0.3s;
+  }
+  
+  .categoryWrapper button > span > span > span{
+    transition: color 0.15s ease-out 0.3s;
+    color: transparent;
+  }
+  
+  .categoryWrapper:hover button > span > span > span{
+    color:rgb(0, 0, 0);
+  }
+  
+  .categoryWrapper button > span > span > span:after{
+    position: relative;
+    top:0;left:0;right:0;bottom:0;
+    color:rgba(14, 16, 138, 0.623);
+    content: attr(data-attr-span);
+    width: 0%;
+    height: 100%;
+    background:rgba(60, 139, 204, 0.041);
+    white-space: nowrap;
+    text-align: center;
+    margin: auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    transition: width 0.2s;
+    background: no-repeat;
+  }
+  
+  .categoryWrapper button:hover > span > span > span:after{
+    width: 100%;
+  }
+  
+  
+
+
+
