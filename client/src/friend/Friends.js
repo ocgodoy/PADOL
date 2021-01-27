@@ -26,6 +26,7 @@ class Friends extends Component {
       pseudosFriends:[],
       pseudosRequests:[],
       friends: [],
+      grouptest:[{name:"Premier groupe",users: ["id1","id2"]}, {name:"Deuxieme groupe", users: ["id3", "id4"]}],
       error: ''
     };
   }
@@ -118,6 +119,29 @@ class Friends extends Component {
         )}
       </div>
     )
+  }
+
+
+
+  renderGroups(groups){
+    return(
+      <div className='row'>
+        {groups.map((group,i) => {
+          return (
+            <div className='card col-md-3 mr-5 mb-5' key={group.name}>
+              <div className='card-body'>
+                <h5 className='card-title'>{group.name}</h5>
+                  {group.users.map((user)=> {
+                    return (<p> {user} </p>)
+                  })}
+              </div>
+            </div>
+          )
+        }
+
+        )}
+      </div>
+    )
 
   }
 
@@ -127,6 +151,7 @@ class Friends extends Component {
       user,
       friends,
       requests,
+      grouptest,
       test,
       error
     } = this.state;
@@ -151,7 +176,11 @@ class Friends extends Component {
         )}
 
         {this.renderRequests(test)}
+
         </center>
+         <h2 className='mt-5 mb-5'>Groups</h2>
+        {this.renderGroups(grouptest)}
+
       </div>
     )
   }

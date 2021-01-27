@@ -19,5 +19,8 @@
   "devDependencies": {
     "standardjs": "^1.0.0-alpha"
   },
-  "dependencies": {}
+  "dependencies": {
+    "react-icons": "^4.1.0",
+    "react-search-autocomplete": "^2.0.4"
+  }
 }

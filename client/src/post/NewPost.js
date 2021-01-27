@@ -1,7 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
+import DatePicker from "react-datepicker";
 import { isAuthenticate } from '../auth';
 import { Redirect } from 'react-router-dom';
 import { createPost } from './apiPost';
+
+import "react-datepicker/dist/react-datepicker.css";
 
 class NewPost extends Component {
   constructor() {
@@ -10,7 +13,7 @@ class NewPost extends Component {
       title: '',
       caption: '',
       viewsLimit:'',
-      timeLimit:'',
+      expiryDate:'',
       photo: '',
       user: {},
       redirectToProfile: false,
@@ -18,6 +21,7 @@ class NewPost extends Component {
       loading: false,
       fileSize: 0
     };
+    this.handleChange = this.handleChange.bind(this);
   }
   
   componentDidMount() {
@@ -31,7 +35,16 @@ class NewPost extends Component {
     this.postData.set(name, value);
     this.setState({ [name]: value, error: '', fileSize });
     console.log("affichage state",this.state)
+    console.log(value);
   };
+
+  handleDateChange = date => {
+    console.log(date);
+    this.postData.set('expiryDate', date);
+    this.setState({
+      expiryDate: date,
+    })
+  }
   
   clickSubmit = e => {
     e.preventDefault();
@@ -52,23 +65,27 @@ class NewPost extends Component {
   };
 
   isValid = () => {
-    const { title, caption, photo, fileSize, viewsLimit, timeLimit } = this.state;
+    const { title, caption, photo, fileSize, viewsLimit, expiryDate } = this.state;
     if (fileSize > 300000) {
       this.setState({ error: 'File size should be less than 300kb ' });
       return false;
-    } else if (title.length === 0 || caption === 0 || viewsLimit.length === 0 || timeLimit.length === 0 || photo.size === undefined) {
-      this.setState({ error: 'All field is required' });
+    } else if (title.length === 0 || caption === 0 || photo.size === undefined) {
+      this.setState({ error: 'Please fill in the required fields' });
       return false;
     }
     return true;
   };
   
-  newPostForm = (title, caption, viewsLimit, timeLimit) => (
+  newPostForm = (title, caption, viewsLimit, expiryDate) => (
     <form>
     <left>
     <div className='form-group'>
-    <label className='text-muted'>Profile Photo</label>
+
     
+    
+
+    <label className='text-muted'>Picture</label>
+
     <input
     
     onChange={this.handleChange('photo')}
@@ -100,21 +117,7 @@ class NewPost extends Component {
     </div>
     <div className='form-group'>
     <label className='text-muted'>
-    Limite de temps :
-    </label>
-    <div>
-    <select value={timeLimit} onChange={this.handleChange('timeLimit')}>
-    <option value="432000000">Aucune</option>
-    <option value="60000">1 minute</option>
-    <option value="900000">15 minutes</option>
-    <option value="36000000">1 heure</option>
-    <option value="18000000">5 heures</option>
-    </select>
-    </div>
-    </div>
-    <div className='form-group'>
-    <label className='text-muted'>
-    Limite de vues :
+    Views Limit :
     </label>
     <div>
     <select value={viewsLimit} onChange={this.handleChange('viewsLimit')}>
@@ -125,6 +128,24 @@ class NewPost extends Component {
     <option value="200">200 vues</option>
     </select>
     </div>
+    </div>
+    <div className='form-groupe'>
+      <label className='text-muted'>
+        Expires on : 
+      </label>
+      <DatePicker
+        value={expiryDate}
+        onChange={this.handleDateChange} //only when value has changed
+        selected={expiryDate}
+        adjustDateOnChange
+        showTimeSelect
+        timeFormat="HH:mm"
+        timeIntervals={15}
+        timeCaption="Time"
+        dateFormat="d MMMM yyyy h:mm aa"
+        timeInputLabel="No date selected"
+      />
+
     </div>
     
     <button onClick={this.clickSubmit} className='btn btn-raised btn-primary'>
@@ -139,7 +160,7 @@ class NewPost extends Component {
         caption,
         redirectToProfile,
         viewsLimit,
-        timeLimit,
+        expiryDate,
         error,
         loading
       } = this.state;
@@ -162,7 +183,7 @@ class NewPost extends Component {
             )}
             
             
-            {this.newPostForm(title, caption, viewsLimit, timeLimit)}
+            {this.newPostForm(title, caption, viewsLimit, expiryDate)}
             </div>
             );
           }
